@@ -42,6 +42,7 @@ $routes->get('/aircrafts', 'Page::aircrafts');
 $routes->get('/trips', 'Page::trips');
 $routes->get('/bids', 'Page::bids');
 $routes->get('/bid/(:any)/operators', 'Page::bid_operators/$1');
+$routes->get('/bid/(:any)/details', 'Page::bid_details/$1');
 
 // Ajax Calls
 $routes->group("ajax", function ($routes) {
@@ -76,8 +77,11 @@ $routes->group("ajax", function ($routes) {
     $routes->get('trip/delete/(:any)', 'AjaxTrip::delete/$1');
 
     $routes->get('bid/all', 'AjaxBid::all');
-    $routes->post('bid/customer/add', 'AjaxBid::customer_add');
     $routes->get('bid/delete/(:any)', 'AjaxBid::delete/$1');
+    $routes->get('bid/get/(:any)', 'AjaxBid::get/$1');
+
+    $routes->post('bid/customer/add', 'AjaxBid::customer_add');
+    $routes->post('bid/customer/update', 'AjaxBid::customer_update');
 
     $routes->get('bid/(:any)/operator/all', 'AjaxBid::operator_all/$1');
     $routes->post('bid/operator/add', 'AjaxBid::operator_add');

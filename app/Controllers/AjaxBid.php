@@ -36,8 +36,9 @@ class AjaxBid extends BaseController
                 count($operator_bids),
                 $row->aircraft_name,
                 $row->cost,
+                $row->pax,
                 $row->status,
-                '<div class="table-col-actions"><span class="text-primary tbl-action-btn tbl-action-btn-edit" data-id="'.$row->id.'">Details</span><a href="'.base_url('/bid/'.$row->id.'/operators').'"class="text-primary tbl-action-btn" data-id="'.$row->id.'">Operators</a><span class="text-success tbl-action-btn tbl-action-btn-edit" data-id="'.$row->id.'">Edit</span><span class="text-danger tbl-action-btn tbl-action-btn-delete" data-id="'.$row->id.'">Delete</span></div>'
+                '<div class="table-col-actions"><a class="text-primary tbl-action-btn" href="'.base_url('/bid/'.$row->id.'/details').'">Details</a><a href="'.base_url('/bid/'.$row->id.'/operators').'" class="text-primary tbl-action-btn">Operators</a><span class="text-success tbl-action-btn tbl-action-btn-edit" data-id="'.$row->id.'">Edit</span><span class="text-danger tbl-action-btn tbl-action-btn-delete" data-id="'.$row->id.'">Delete</span></div>'
             );
         }
         
@@ -45,6 +46,24 @@ class AjaxBid extends BaseController
             'success' => true,
             'data' => $data
         ));
+    }
+
+    public function get($id)
+    {
+        $model = new BidModel();
+        $found = $model->find($id);
+        if($found) {
+            return $this->response->setJson(array(
+                'success' => true,
+                'data' => $found
+            ));
+        }
+        else {
+            return $this->response->setJson(array(
+                'success' => false,
+                'message' => 'Not found data'
+            ));
+        }
     }
 
     public function delete($id)
@@ -97,6 +116,59 @@ class AjaxBid extends BaseController
 
         $model = new BidModel();
         $model->insert(array(
+            'customer' => $customer_id,
+            'trip' => $trip_id,
+            'pax' => isset($_POST['pax']) ? $_POST['pax'] : '',
+            'aircraft' => isset($_POST['aircraft']) ? $_POST['aircraft'] : '',
+            'status' => 'new'
+        ));
+
+        return $this->response->setJson(array(
+            'success' => true,
+            'new_id' => $model->getInsertID()
+        ));
+    }
+
+    public function customer_update()
+    {
+        $customer_id = null;
+
+        if(isset($_POST['customer_option']) && $_POST['customer_option'] == 'new') {
+            // create new customer
+            $model = new CustomerModel();
+            $model->insert(array(
+                'name' => isset($_POST['customer_name']) ? $_POST['customer_name'] : '',
+                'company' => isset($_POST['customer_company']) ? $_POST['customer_company'] : '',
+                'email' => isset($_POST['customer_email']) ? $_POST['customer_email'] : '',
+                'telephone' => isset($_POST['customer_telephone']) ? $_POST['customer_telephone'] : '',
+            ));
+
+            $customer_id = $model->getInsertID();
+        }
+        else {
+            $customer_id = $_POST['customer_id'];
+        }
+
+        $trip_id = null;
+        if(isset($_POST['trip_option']) && $_POST['trip_option'] == 'new') {
+            // create new customer
+            $model = new TripModel();
+            $model->insert(array(
+                'name' => isset($_POST['trip_name']) ? $_POST['trip_name'] : '',
+                'date_from' => isset($_POST['trip_date_from']) ? $_POST['trip_date_from'] : '',
+                'date_to' => isset($_POST['trip_date_to']) ? $_POST['trip_date_to'] : '',
+                'place_from' => isset($_POST['trip_place_from']) ? $_POST['trip_place_from'] : '',
+                'place_to' => isset($_POST['trip_place_to']) ? $_POST['trip_place_to'] : ''
+            ));
+
+            $trip_id = $model->getInsertID();
+        }
+        else {
+            $trip_id = $_POST['trip_id'];
+        }
+
+        $model = new BidModel();
+        $model->update(isset($_POST['bid_id']) ? $_POST['bid_id'] : '', array(
             'customer' => $customer_id,
             'trip' => $trip_id,
             'pax' => isset($_POST['pax']) ? $_POST['pax'] : '',

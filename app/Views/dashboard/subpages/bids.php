@@ -29,6 +29,7 @@
                   <th>Operators</th>
                   <th>Aircraft</th>
                   <th>Cost</th>
+                  <th>Pax</th>
                   <th>Status</th>
                   <th>Action</th>                    
                 </tr>
@@ -214,9 +215,11 @@
           </div>
         </div>
       </div>
+      <input type="hidden" name="bid_id" id="bid_id">
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" id="btn_save">Save</button>
+        <button type="button" class="btn btn-primary" id="btn_update">Update</button>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -286,6 +289,8 @@
 
   var modal_customer_add_input_pax = $('#modal_customer_add_bid #pax');
   var modal_customer_add_input_aircraft = $('#modal_customer_add_bid #aircraft');
+
+  var modal_customer_add_input_id = $('#modal_customer_add_bid #bid_id');
 
   $(document).on('click', '#btn_new', function() {
     $(modal_customer_add_btn_save).show();
@@ -448,7 +453,7 @@
       data: data,
       success: function(resp) {
         if(resp.success) {
-          alert('Added Successfully!');
+          alert('Updated Successfully!');
           table.ajax.reload();
 
           $(modal_customer_add).modal('hide');
@@ -477,5 +482,171 @@
         }
       })
     }
+  })
+
+  $(document).on('click', '#modal_customer_add_bid #btn_update', function() {
+    var data = {};
+    if($('#modal_customer_add_bid [name="customer_option"]:checked').val() == 'exist') {
+      if($(modal_customer_add_input_customer_select).val() == '') {
+        alert('Please Select Customer');
+        $(modal_customer_add_input_customer_select).focus() ;
+        return;
+      }
+      data['customer_id'] = $(modal_customer_add_input_customer_select).val();
+    }
+    else {
+      if($(modal_customer_add_input_customer_name).val() == '') {
+        alert('Please Input Customer Name');
+        $(modal_customer_add_input_customer_name).focus()
+        return;
+      }
+      data['customer_name'] = $(modal_customer_add_input_customer_name).val();
+
+      if($(modal_customer_add_input_customer_company).val() == '') {
+        alert('Please Input Customer Company');
+        $(modal_customer_add_input_customer_company).focus()
+        return;
+      }
+      data['customer_company'] = $(modal_customer_add_input_customer_company).val();
+
+      if($(modal_customer_add_input_customer_email).val() == '') {
+        alert('Please Input Customer Email');
+        $(modal_customer_add_input_customer_email).focus()
+        return;
+      }
+      data['customer_email'] = $(modal_customer_add_input_customer_email).val();
+
+      if($(modal_customer_add_input_customer_telephone).val() == '') {
+        alert('Please Input Customer Telephone');
+        $(modal_customer_add_input_customer_telephone).focus()
+        return;
+      }
+      data['customer_telephone'] = $(modal_customer_add_input_customer_telephone).val();
+    }
+    data['customer_option'] = $('#modal_customer_add_bid [name="customer_option"]:checked').val();
+
+    if($('#modal_customer_add_bid [name="trip_option"]:checked').val() == 'exist') {
+      if($(modal_customer_add_input_trip_select).val() == '') {
+        alert('Please Select Trip');
+        $(modal_customer_add_input_trip_select).focus() ;
+        return;
+      }
+      data['trip_id'] = $(modal_customer_add_input_trip_select).val();
+    }
+    else {
+      if($(modal_customer_add_input_trip_name).val() == '') {
+        alert('Please Input Trip Name');
+        $(modal_customer_add_input_trip_name).focus()
+        return;
+      }
+      data['trip_name'] = $(modal_customer_add_input_trip_name).val();
+
+      if($(modal_customer_add_input_trip_place_from).val() == '') {
+        alert('Please Input Trip From');
+        $(modal_customer_add_input_trip_place_from).focus()
+        return;
+      }
+      data['trip_place_from'] = $(modal_customer_add_input_trip_place_from).val();
+
+      if($(modal_customer_add_input_trip_place_to).val() == '') {
+        alert('Please Input Trip To');
+        $(modal_customer_add_input_trip_place_to).focus()
+        return;
+      }
+      data['trip_place_to'] = $(modal_customer_add_input_trip_place_to).val();
+
+      if($(modal_customer_add_input_trip_date_from).val() == '') {
+        alert('Please Input Trip Date From');
+        $(modal_customer_add_input_trip_date_from).focus()
+        return;
+      }
+      data['trip_date_from'] = $(modal_customer_add_input_trip_date_from).val();
+
+      if($(modal_customer_add_input_trip_date_to).val() == '') {
+        alert('Please Input Trip Date To');
+        $(modal_customer_add_input_trip_date_to).focus()
+        return;
+      }
+      data['trip_date_to'] = $(modal_customer_add_input_trip_date_to).val();
+    }
+    data['trip_option'] = $('#modal_customer_add_bid [name="trip_option"]:checked').val();
+
+    if($(modal_customer_add_input_pax).val() == '') {
+      alert('Please Input Pax');
+      $(modal_customer_add_input_pax).focus()
+      return;
+    }
+    data['pax'] = $(modal_customer_add_input_pax).val();
+
+    if($(modal_customer_add_input_aircraft).val() == '') {
+      alert('Please Select Aircraft');
+      $(modal_customer_add_input_aircraft).focus()
+      return;
+    }
+    data['aircraft'] = $(modal_customer_add_input_aircraft).val();
+    data['bid_id'] = $(modal_customer_add_input_id).val();
+
+    $.ajax({
+      url: base_url + '/ajax/bid/customer/update',
+      type: 'post',
+      dataType: 'json',
+      data: data,
+      success: function(resp) {
+        if(resp.success) {
+          alert('Added Successfully!');
+          table.ajax.reload();
+
+          $(modal_customer_add).modal('hide');
+        }
+        else {
+          alert(resp.message);
+        }
+      }
+    })
+  })
+
+  $(document).on('click', '.tbl-action-btn-edit', function() {
+    $.ajax({
+      url: base_url + '/ajax/bid/get/' + $(this).data('id'),
+      type: 'get',
+      dataType: 'json',
+      success: function(resp) {
+        if(resp.success) {
+          $(modal_customer_add_btn_save).hide();
+          $(modal_customer_add_btn_update).show();
+
+          $(modal_customer_add_input_customer_select).val(resp.data.customer);
+          $(modal_customer_add_input_customer_name).val('');
+          $(modal_customer_add_input_customer_company).val('');
+          $(modal_customer_add_input_customer_email).val('');
+          $(modal_customer_add_input_customer_telephone).val('');
+
+          $(modal_customer_add_input_trip_select).val(resp.data.trip);
+          $(modal_customer_add_input_trip_name).val('');
+          $(modal_customer_add_input_trip_place_from).val('');
+          $(modal_customer_add_input_trip_place_to).val('');
+          $(modal_customer_add_input_trip_date_from).val('');
+          $(modal_customer_add_input_trip_date_to).val('');
+
+          $(modal_customer_add_input_pax).val(resp.data.pax);
+          $(modal_customer_add_input_aircraft).val(resp.data.aircraft);
+
+          $(modal_customer_add_customer_exist_inputs).show();
+          $(modal_customer_add_customer_new_inputs).hide();
+          $(modal_customer_add_input_customer_option_exist).prop('checked', true);
+
+          $(modal_customer_add_trip_exist_inputs).show();
+          $(modal_customer_add_trip_new_inputs).hide();
+          $(modal_customer_add_input_trip_option_exist).prop('checked', true);
+
+          $(modal_customer_add_input_id).val(resp.data.id);
+
+          $(modal_customer_add).modal('show');
+        }
+        else {
+          alert(resp.message);
+        }
+      }
+    })
   })
 </script>

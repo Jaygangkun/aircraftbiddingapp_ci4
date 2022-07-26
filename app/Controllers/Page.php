@@ -7,6 +7,7 @@ use App\Models\CustomerModel;
 use App\Models\TripModel;
 use App\Models\OperatorModel;
 use App\Models\BidModel;
+use App\Models\OperatorBidModel;
 
 class Page extends BaseController
 {
@@ -135,6 +136,28 @@ class Page extends BaseController
             'bid_id' => $bid_id,
             'aircrafts' => $model_aircraft->findAll(),
             'operators' => $model_operator->findAll(),
+        );
+
+        return view('dashboard/basic', $data);
+    }
+
+    public function bid_details($bid_id)
+    {
+        $model_bid = new BidModel();
+        $model_trip = new TripModel();
+        $model_customer = new CustomerModel();
+        $model_operator_bid = new OperatorBidModel();
+
+        $bid_data = $model_bid->find($bid_id);
+
+        $data = array(
+            'title' => 'Bid Details',
+            'sub_page' => 'bid-details',
+
+            'bid' => $model_bid->get_bid_details($bid_id),
+            'trip' => $model_trip->find($bid_data['trip']),
+            'customer' => $model_customer->find($bid_data['customer']),
+            'operators' => $model_operator_bid->get_bid_operators_table_data($bid_id)
         );
 
         return view('dashboard/basic', $data);
