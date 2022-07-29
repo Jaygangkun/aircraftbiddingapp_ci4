@@ -57,11 +57,6 @@
                 </span>
               </li>
               <li class="nav-item">
-              <span href="#" class="nav-link">
-                  Cost <span class="float-right"><?php echo $bid[0]->cost?></span>
-                </span>
-              </li>
-              <li class="nav-item">
                 <span href="#" class="nav-link">
                   Aircraft <span class="float-right"><?php echo $bid[0]->aircraft_name?></span>
                 </span>
