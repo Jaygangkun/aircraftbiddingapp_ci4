@@ -2,15 +2,14 @@
 namespace App\Models;
 use CodeIgniter\Model;
 
-class TripModel extends Model
+class AircraftCategoryModel extends Model
 {
-    protected $table = 'trips';
+    protected $table = 'aircraft_categories';
     protected $primaryKey = 'id';
 
 	protected $returnType = 'array';
 
-	protected $allowedFields = ['name', 'status'];
+	protected $allowedFields = ['name'];
 
     protected $db;
-
 }

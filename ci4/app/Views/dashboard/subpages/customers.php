@@ -58,19 +58,19 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="company">Company <i class="text-danger">*</i></label>
+            <label for="company">Company</label>
             <div class="input-group">
                 <input type="text" name="company" id="company" class="form-control" value="">
             </div>
           </div>
           <div class="form-group">
-            <label for="email">Email <i class="text-danger">*</i></label>
+            <label for="email">Email</label>
             <div class="input-group">
                 <input type="text" name="email" id="email" class="form-control" value="">
             </div>
           </div>
           <div class="form-group">
-            <label for="telephone">Telephone <i class="text-danger">*</i></label>
+            <label for="telephone">Telephone</label>
             <div class="input-group">
                 <input type="text" name="telephone" id="telephone" class="form-control" value="">
             </div>
@@ -144,23 +144,23 @@
       return;
     }
 
-    if($(modal_add_input_company).val() == '') {
-      alert('Please Input Company');
-      $(modal_add_input_company).focus()
-      return;
-    }
+    // if($(modal_add_input_company).val() == '') {
+    //   alert('Please Input Company');
+    //   $(modal_add_input_company).focus()
+    //   return;
+    // }
 
-    if($(modal_add_input_email).val() == '') {
-      alert('Please Input Email');
-      $(modal_add_input_email).focus()
-      return;
-    }
+    // if($(modal_add_input_email).val() == '') {
+    //   alert('Please Input Email');
+    //   $(modal_add_input_email).focus()
+    //   return;
+    // }
 
-    if($(modal_add_input_telephone).val() == '') {
-      alert('Please Input Telephone');
-      $(modal_add_input_telephone).focus()
-      return;
-    }
+    // if($(modal_add_input_telephone).val() == '') {
+    //   alert('Please Input Telephone');
+    //   $(modal_add_input_telephone).focus()
+    //   return;
+    // }
 
     $.ajax({
       url: base_url + '/ajax/customer/add',
@@ -193,23 +193,23 @@
       return;
     }
 
-    if($(modal_add_input_company).val() == '') {
-      alert('Please Input Company');
-      $(modal_add_input_company).focus()
-      return;
-    }
+    // if($(modal_add_input_company).val() == '') {
+    //   alert('Please Input Company');
+    //   $(modal_add_input_company).focus()
+    //   return;
+    // }
 
-    if($(modal_add_input_email).val() == '') {
-      alert('Please Input Email');
-      $(modal_add_input_email).focus()
-      return;
-    }
+    // if($(modal_add_input_email).val() == '') {
+    //   alert('Please Input Email');
+    //   $(modal_add_input_email).focus()
+    //   return;
+    // }
 
-    if($(modal_add_input_telephone).val() == '') {
-      alert('Please Input Telephone');
-      $(modal_add_input_telephone).focus()
-      return;
-    }
+    // if($(modal_add_input_telephone).val() == '') {
+    //   alert('Please Input Telephone');
+    //   $(modal_add_input_telephone).focus()
+    //   return;
+    // }
 
     $.ajax({
       url: base_url + '/ajax/customer/update',

@@ -1,14 +1,11 @@
 <!-- Main content -->
 <section class="content">
   <div class="container-fluid">
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title"><?php echo $aircraft_category['name']?></h3>
-      </div>
+    <div class="card card-primary">
       <div class="card-body">
         <div class="row d-flex justify-content-between">
           <div class="col-md-2">
-            <button class="btn btn-primary" id="btn_new">New</button>
+            <button class="btn btn-primary" id="btn_new">New Category</button>
           </div>
           <div class="col-md-4">
             <div class="input-group">
@@ -24,10 +21,11 @@
 
         <div class="row mt-4">
           <div class="col-md-12">
-            <table id="aircrafts" class="table table-bordered table-striped">
+            <table id="aircraft_types" class="table table-bordered table-striped">
               <thead>
                 <tr>
-                  <th>Name</th>
+                  <th>Category Name</th>
+                  <th>Aircrafts</th>
                   <th>Action</th>                    
                 </tr>
               </thead>
@@ -45,8 +43,8 @@
 </section>
 <!-- /.content -->
 
-<!-- Add or Update Aircraft Modal -->
-<div class="modal fade" id="modal_add_aircrafts" data-backdrop="static" role="dialog">
+<!-- Add or Update Aircraft Types Modal -->
+<div class="modal fade" id="modal_add_aircraft_types" data-backdrop="static" role="dialog">
   <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-body">
@@ -59,7 +57,7 @@
           </div>
         </div>
       </div>
-      <input type="hidden" name="aircraft_id" id="aircraft_id">
+      <input type="hidden" name="aircraft_type_id" id="aircraft_type_id">
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" id="btn_save">Save</button>
@@ -70,24 +68,24 @@
   </div>
   <!-- /.modal-dialog -->
 </div>
-<!-- /.Add or Update Aircraft Modal -->
+<!-- /.Add or Update Aircraft Types Modal -->
 
 <style>
-#aircrafts_wrapper .row:first-of-type {
+#aircraft_types_wrapper .row:first-of-type {
   display: none;
 }
 </style>
 <script>
-  var modal_add = $('#modal_add_aircrafts');
+  var modal_add = $('#modal_add_aircraft_types');
 
-  var modal_add_btn_save = $('#modal_add_aircrafts #btn_save');
-  var modal_add_btn_update = $('#modal_add_aircrafts #btn_update');
+  var modal_add_btn_save = $('#modal_add_aircraft_types #btn_save');
+  var modal_add_btn_update = $('#modal_add_aircraft_types #btn_update');
 
-  var modal_add_input_name = $('#modal_add_aircrafts #name');
+  var modal_add_input_name = $('#modal_add_aircraft_types #name');
 
-  var modal_add_input_id = $('#modal_add_aircrafts #aircraft_id');
+  var modal_add_input_id = $('#modal_add_aircraft_types #aircraft_type_id');
 
-  var table = $('#aircrafts').DataTable({
+  var table = $('#aircraft_types').DataTable({
     "pagingType": 'full_numbers',
     "paging": true,
     "lengthChange": false,
@@ -97,7 +95,7 @@
     "autoWidth": false,
     "responsive": true,
     'ajax': {
-      url: base_url + '/ajax/aircraft/<?php echo $aircraft_category['id']?>/all',
+      url: base_url + '/ajax/aircraft/category/all',
     }
   });
 
@@ -114,7 +112,7 @@
     $(modal_add).modal('show');
   })
 
-  $(document).on('click', '#modal_add_aircrafts #btn_save', function() {
+  $(document).on('click', '#modal_add_aircraft_types #btn_save', function() {
     if($(modal_add_input_name).val() == '') {
       alert('Please Input Name');
       $(modal_add_input_name).focus()
@@ -122,7 +120,7 @@
     }
 
     $.ajax({
-      url: base_url + '/ajax/aircraft/<?php echo $aircraft_category['id']?>/add',
+      url: base_url + '/ajax/aircraft/category/add',
       type: 'post',
       dataType: 'json',
       data: {
@@ -142,7 +140,7 @@
     })
   })
 
-  $(document).on('click', '#modal_add_aircrafts #btn_update', function() {
+  $(document).on('click', '#modal_add_aircraft_types #btn_update', function() {
     if($(modal_add_input_name).val() == '') {
       alert('Please Input Name');
       $(modal_add_input_name).focus()
@@ -150,7 +148,7 @@
     }
 
     $.ajax({
-      url: base_url + '/ajax/aircraft/update',
+      url: base_url + '/ajax/aircraft/category/update',
       type: 'post',
       dataType: 'json',
       data: {
@@ -173,7 +171,7 @@
 
   $(document).on('click', '.tbl-action-btn-edit', function() {
     $.ajax({
-      url: base_url + '/ajax/aircraft/get/' + $(this).data('id'),
+      url: base_url + '/ajax/aircraft/category/get/' + $(this).data('id'),
       type: 'get',
       dataType: 'json',
       success: function(resp) {
@@ -197,7 +195,7 @@
   $(document).on('click', '.tbl-action-btn-delete', function() {
     if(confirm('Are you sure to delete?')) {
       $.ajax({
-        url: base_url + '/ajax/aircraft/delete/' + $(this).data('id'),
+        url: base_url + '/ajax/aircraft/category/delete/' + $(this).data('id'),
         type: 'get',
         dataType: 'json',
         success: function(resp) {

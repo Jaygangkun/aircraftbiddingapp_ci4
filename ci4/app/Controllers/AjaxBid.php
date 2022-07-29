@@ -6,7 +6,10 @@ use App\Models\BidModel;
 use App\Models\CustomerModel;
 use App\Models\OperatorModel;
 use App\Models\TripModel;
+use App\Models\TripLegModel;
 use App\Models\OperatorBidModel;
+use App\Models\AircraftModel;
+use App\Models\AircraftCategoryModel;
 
 use Firebase\JWT\JWT;
 
@@ -31,14 +34,13 @@ class AjaxBid extends BaseController
             $operator_bids = $model_operator_bid->where('bid', $row->id)->findAll();
 
             $data[] = array(
-                $row->trip_name,
+                '<a href="'.base_url('/bid/'.$row->id.'/details').'">'.$row->trip_name.'</a>',
                 $row->customer_name,
                 count($operator_bids),
-                $row->aircraft_name,
-                $row->cost,
+                $row->aircraft_name.($row->aircraft_category_name != '' ? ' (<a href="'.base_url('/aircrafts/'.$row->aircraft_category_id).'">'.$row->aircraft_category_name.'</a>)' : ''),
                 $row->pax,
                 $row->status,
-                '<div class="table-col-actions"><a class="text-primary tbl-action-btn" href="'.base_url('/bid/'.$row->id.'/details').'">Details</a><a href="'.base_url('/bid/'.$row->id.'/operators').'" class="text-primary tbl-action-btn">Operators</a><span class="text-success tbl-action-btn tbl-action-btn-edit" data-id="'.$row->id.'">Edit</span><span class="text-danger tbl-action-btn tbl-action-btn-delete" data-id="'.$row->id.'">Delete</span></div>'
+                '<div class="table-col-actions"><span class="text-success tbl-action-btn tbl-action-btn-edit" data-id="'.$row->id.'">Edit</span><span class="text-danger tbl-action-btn tbl-action-btn-delete" data-id="'.$row->id.'">Delete</span></div>'
             );
         }
         
@@ -98,20 +100,58 @@ class AjaxBid extends BaseController
 
         $trip_id = null;
         if(isset($_POST['trip_option']) && $_POST['trip_option'] == 'new') {
-            // create new customer
+            // create new trip
             $model = new TripModel();
             $model->insert(array(
                 'name' => isset($_POST['trip_name']) ? $_POST['trip_name'] : '',
-                'date_from' => isset($_POST['trip_date_from']) ? $_POST['trip_date_from'] : '',
-                'date_to' => isset($_POST['trip_date_to']) ? $_POST['trip_date_to'] : '',
-                'place_from' => isset($_POST['trip_place_from']) ? $_POST['trip_place_from'] : '',
-                'place_to' => isset($_POST['trip_place_to']) ? $_POST['trip_place_to'] : ''
+                'status' => isset($_POST['status']) ? $_POST['status'] : ''
             ));
 
             $trip_id = $model->getInsertID();
+
+            $model = new TripLegModel();
+            if(isset($_POST['legs'])) {
+                foreach($_POST['legs'] as $leg) {
+                    $model->insert(array(
+                        'trip' => $trip_id,
+                        'from' => $leg['from'],
+                        'to' => $leg['to'],
+                        'date' => $leg['date'],
+                        'time' => $leg['time'],
+                    ));
+                }
+            }
         }
         else {
             $trip_id = $_POST['trip_id'];
+        }
+
+        $aircraft_id = null;
+        if(isset($_POST['aircraft_option']) && $_POST['aircraft_option'] == 'new') {
+            // create new aircraft
+            if(isset($_POST['aircraft_category_name']) && $_POST['aircraft_category_name'] != '') {
+                // create new aircraft category
+                $model = new AircraftCategoryModel();
+                $model->insert(array(
+                    'name' => isset($_POST['aircraft_category_name']) ? $_POST['aircraft_category_name'] : '',
+                ));
+    
+                $aircraft_category_id = $model->getInsertID();    
+            }
+            else {
+                $aircraft_category_id = isset($_POST['aircraft_category']) ? $_POST['aircraft_category'] : '';
+            }
+
+            $model = new AircraftModel();
+            $model->insert(array(
+                'name' => isset($_POST['aircraft_name']) ? $_POST['aircraft_name'] : '',
+                'category' => $aircraft_category_id
+            ));
+
+            $aircraft_id = $model->getInsertID();
+        }
+        else {
+            $aircraft_id = $_POST['aircraft_id'];
         }
 
         $model = new BidModel();
@@ -119,8 +159,8 @@ class AjaxBid extends BaseController
             'customer' => $customer_id,
             'trip' => $trip_id,
             'pax' => isset($_POST['pax']) ? $_POST['pax'] : '',
-            'aircraft' => isset($_POST['aircraft']) ? $_POST['aircraft'] : '',
-            'status' => 'new'
+            'aircraft' => $aircraft_id,
+            'status' => isset($_POST['status']) ? $_POST['status'] : '',
         ));
 
         return $this->response->setJson(array(
@@ -151,20 +191,58 @@ class AjaxBid extends BaseController
 
         $trip_id = null;
         if(isset($_POST['trip_option']) && $_POST['trip_option'] == 'new') {
-            // create new customer
+            // create new trip
             $model = new TripModel();
             $model->insert(array(
                 'name' => isset($_POST['trip_name']) ? $_POST['trip_name'] : '',
-                'date_from' => isset($_POST['trip_date_from']) ? $_POST['trip_date_from'] : '',
-                'date_to' => isset($_POST['trip_date_to']) ? $_POST['trip_date_to'] : '',
-                'place_from' => isset($_POST['trip_place_from']) ? $_POST['trip_place_from'] : '',
-                'place_to' => isset($_POST['trip_place_to']) ? $_POST['trip_place_to'] : ''
+                'status' => isset($_POST['status']) ? $_POST['status'] : ''
             ));
 
             $trip_id = $model->getInsertID();
+
+            $model = new TripLegModel();
+            if(isset($_POST['legs'])) {
+                foreach($_POST['legs'] as $leg) {
+                    $model->insert(array(
+                        'trip' => $trip_id,
+                        'from' => $leg['from'],
+                        'to' => $leg['to'],
+                        'date' => $leg['date'],
+                        'time' => $leg['time'],
+                    ));
+                }
+            }
         }
         else {
             $trip_id = $_POST['trip_id'];
+        }
+
+        $aircraft_id = null;
+        if(isset($_POST['aircraft_option']) && $_POST['aircraft_option'] == 'new') {
+            // create new aircraft
+            if(isset($_POST['aircraft_category_name']) && $_POST['aircraft_category_name'] != '') {
+                // create new aircraft category
+                $model = new AircraftCategoryModel();
+                $model->insert(array(
+                    'name' => isset($_POST['aircraft_category_name']) ? $_POST['aircraft_category_name'] : '',
+                ));
+    
+                $aircraft_category_id = $model->getInsertID();    
+            }
+            else {
+                $aircraft_category_id = isset($_POST['aircraft_category']) ? $_POST['aircraft_category'] : '';
+            }
+
+            $model = new AircraftModel();
+            $model->insert(array(
+                'name' => isset($_POST['aircraft_name']) ? $_POST['aircraft_name'] : '',
+                'category' => $aircraft_category_id
+            ));
+
+            $aircraft_id = $model->getInsertID();
+        }
+        else {
+            $aircraft_id = $_POST['aircraft_id'];
         }
 
         $model = new BidModel();
@@ -172,8 +250,8 @@ class AjaxBid extends BaseController
             'customer' => $customer_id,
             'trip' => $trip_id,
             'pax' => isset($_POST['pax']) ? $_POST['pax'] : '',
-            'aircraft' => isset($_POST['aircraft']) ? $_POST['aircraft'] : '',
-            'status' => 'new'
+            'aircraft' => $aircraft_id,
+            'status' => isset($_POST['status']) ? $_POST['status'] : '',
         ));
 
         return $this->response->setJson(array(
@@ -197,7 +275,8 @@ class AjaxBid extends BaseController
                 $row->operator_name,
                 $row->pax,
                 $row->cost,
-                $row->aircraft_name,
+                $row->aircraft_name.($row->aircraft_category_name != '' ? ' (<a href="'.base_url('/aircrafts/'.$row->aircraft_category_id).'">'.$row->aircraft_category_name.'</a>)' : ''),
+
                 $row->status,
                 '<div class="table-col-actions"><span class="text-success tbl-action-btn tbl-action-btn-edit" data-id="'.$row->id.'">Edit</span><span class="text-danger tbl-action-btn tbl-action-btn-delete" data-id="'.$row->id.'">Delete</span></div>'
             );
@@ -246,18 +325,41 @@ class AjaxBid extends BaseController
             $operator_id = $_POST['operator_id'];
         }
 
-        $model = new BidModel();
-        $model->update(isset($_POST['bid_id']) ? $_POST['bid_id'] : '', array(
-            // 'cost' => isset($_POST['cost']) ? $_POST['cost'] : '',
-            'status' => 'pending'
-        ));
+        $aircraft_id = null;
+        if(isset($_POST['aircraft_option']) && $_POST['aircraft_option'] == 'new') {
+            // create new aircraft
+            if(isset($_POST['aircraft_category_name']) && $_POST['aircraft_category_name'] != '') {
+                // create new aircraft category
+                $model = new AircraftCategoryModel();
+                $model->insert(array(
+                    'name' => isset($_POST['aircraft_category_name']) ? $_POST['aircraft_category_name'] : '',
+                ));
+    
+                $aircraft_category_id = $model->getInsertID();    
+            }
+            else {
+                $aircraft_category_id = isset($_POST['aircraft_category']) ? $_POST['aircraft_category'] : '';
+            }
+
+            $model = new AircraftModel();
+            $model->insert(array(
+                'name' => isset($_POST['aircraft_name']) ? $_POST['aircraft_name'] : '',
+                'category' => $aircraft_category_id
+            ));
+
+            $aircraft_id = $model->getInsertID();
+        }
+        else {
+            $aircraft_id = $_POST['aircraft_id'];
+        }
+
         $model = new OperatorBidModel();
         $model->insert(array(
             'bid' => isset($_POST['bid_id']) ? $_POST['bid_id'] : '',
             'operator' => $operator_id,
             'pax' => isset($_POST['pax']) ? $_POST['pax'] : '',
             'cost' => isset($_POST['cost']) ? $_POST['cost'] : '',
-            'aircraft' => isset($_POST['aircraft']) ? $_POST['aircraft'] : '',
+            'aircraft' => $aircraft_id,
             'status' => isset($_POST['operator_status']) ? $_POST['operator_status'] : '',
         ));
 
@@ -286,17 +388,40 @@ class AjaxBid extends BaseController
             $operator_id = $_POST['operator_id'];
         }
 
-        $model = new BidModel();
-        $model->update(isset($_POST['bid_id']) ? $_POST['bid_id'] : '', array(
-            // 'cost' => isset($_POST['cost']) ? $_POST['cost'] : '',
-            'status' => 'pending'
-        ));
+        $aircraft_id = null;
+        if(isset($_POST['aircraft_option']) && $_POST['aircraft_option'] == 'new') {
+            // create new aircraft
+            if(isset($_POST['aircraft_category_name']) && $_POST['aircraft_category_name'] != '') {
+                // create new aircraft category
+                $model = new AircraftCategoryModel();
+                $model->insert(array(
+                    'name' => isset($_POST['aircraft_category_name']) ? $_POST['aircraft_category_name'] : '',
+                ));
+    
+                $aircraft_category_id = $model->getInsertID();    
+            }
+            else {
+                $aircraft_category_id = isset($_POST['aircraft_category']) ? $_POST['aircraft_category'] : '';
+            }
+
+            $model = new AircraftModel();
+            $model->insert(array(
+                'name' => isset($_POST['aircraft_name']) ? $_POST['aircraft_name'] : '',
+                'category' => $aircraft_category_id
+            ));
+
+            $aircraft_id = $model->getInsertID();
+        }
+        else {
+            $aircraft_id = $_POST['aircraft_id'];
+        }
+
         $model = new OperatorBidModel();
         $model->update(isset($_POST['operator_bid_id']) ? $_POST['operator_bid_id'] : '', array(
             'operator' => $operator_id,
             'pax' => isset($_POST['pax']) ? $_POST['pax'] : '',
             'cost' => isset($_POST['cost']) ? $_POST['cost'] : '',
-            'aircraft' => isset($_POST['aircraft']) ? $_POST['aircraft'] : '',
+            'aircraft' => $aircraft_id,
             'status' => isset($_POST['operator_status']) ? $_POST['operator_status'] : '',
         ));
 

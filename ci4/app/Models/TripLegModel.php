@@ -2,15 +2,14 @@
 namespace App\Models;
 use CodeIgniter\Model;
 
-class TripModel extends Model
+class TripLegModel extends Model
 {
-    protected $table = 'trips';
+    protected $table = 'trip_legs';
     protected $primaryKey = 'id';
 
 	protected $returnType = 'array';
 
-	protected $allowedFields = ['name', 'status'];
+	protected $allowedFields = ['name', 'trip', 'from', 'to', 'date', 'time'];
 
     protected $db;
-
 }

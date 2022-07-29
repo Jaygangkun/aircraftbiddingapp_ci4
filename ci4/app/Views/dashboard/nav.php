@@ -20,7 +20,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a href="<?= base_url('/aircrafts') ?>" class="nav-link <?php echo isset($sub_page) && $sub_page == 'aircrafts' ? 'active' : '' ?>">
+        <a href="<?= base_url('/aircraft/categories') ?>" class="nav-link <?php echo isset($sub_page) && $sub_page == 'aircraft-categories' ? 'active' : '' ?>">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>Aircrafts</p>
         </a>

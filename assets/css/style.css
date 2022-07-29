@@ -3,3 +3,16 @@
     display: inline-block;
     margin-right: 10px;
 }
+
+.text-btn {
+    cursor: pointer;
+}
+
+.text-link {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.table .form-group {
+    margin-bottom: 0px;
+}

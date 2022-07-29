@@ -15,7 +15,7 @@ class BidModel extends Model
 
     public function get_bids_table_data()
     {
-        $query = $this->db->query('SELECT bids.*, customers.name AS customer_name, aircrafts.name AS aircraft_name, trips.name AS trip_name FROM bids JOIN customers ON bids.customer=customers.id JOIN aircrafts ON bids.aircraft=aircrafts.id JOIN trips ON trips.id=bids.trip');
+        $query = $this->db->query('SELECT bids.*, customers.name AS customer_name, aircrafts.name AS aircraft_name, trips.name AS trip_name, aircraft_categories.name AS aircraft_category_name, aircraft_categories.id AS aircraft_category_id FROM bids LEFT JOIN customers ON bids.customer=customers.id LEFT JOIN aircrafts ON bids.aircraft=aircrafts.id LEFT JOIN trips ON trips.id=bids.trip LEFT JOIN aircraft_categories ON aircrafts.category=aircraft_categories.id');
         return $query->getResult();
     }
 

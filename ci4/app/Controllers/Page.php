@@ -3,8 +3,10 @@
 namespace App\Controllers;
 
 use App\Models\AircraftModel;
+use App\Models\AircraftCategoryModel;
 use App\Models\CustomerModel;
 use App\Models\TripModel;
+use App\Models\TripLegModel;
 use App\Models\OperatorModel;
 use App\Models\BidModel;
 use App\Models\OperatorBidModel;
@@ -86,11 +88,24 @@ class Page extends BaseController
         return view('dashboard/basic', $data);
     }
 
-    public function aircrafts()
+    public function aircraft_categories()
     {
         $data = array(
             'title' => 'Aircrafts',
-            'sub_page' => 'aircrafts'
+            'sub_page' => 'aircraft-categories'
+        );
+
+        return view('dashboard/basic', $data);
+    }
+
+    public function aircrafts($aircraft_category_id)
+    {
+        $model = new AircraftCategoryModel();
+        $data = array(
+            'title' => 'Aircrafts',
+            'sub_page' => 'aircrafts',
+
+            'aircraft_category' => $model->find($aircraft_category_id)
         );
 
         return view('dashboard/basic', $data);
@@ -111,6 +126,7 @@ class Page extends BaseController
         $model_customer = new CustomerModel();
         $model_trip = new TripModel();
         $model_aircraft = new AircraftModel();
+        $model_aircraft_category = new AircraftCategoryModel();
 
         $data = array(
             'title' => 'Bids',
@@ -118,7 +134,8 @@ class Page extends BaseController
 
             'customers' => $model_customer->findAll(),
             'trips' => $model_trip->findAll(),
-            'aircrafts' => $model_aircraft->findAll()
+            'aircrafts' => $model_aircraft->get_aircrafts_with_category(),
+            'aircraft_categories' => $model_aircraft_category->findAll(),
         );
 
         return view('dashboard/basic', $data);
@@ -146,18 +163,29 @@ class Page extends BaseController
         $model_bid = new BidModel();
         $model_trip = new TripModel();
         $model_customer = new CustomerModel();
+        $model_operator = new OperatorModel();
         $model_operator_bid = new OperatorBidModel();
+        $model_trip_legs = new TripLegModel();
+        $model_aircraft = new AircraftModel();
+        $model_aircraft_category = new AircraftCategoryModel();
 
         $bid_data = $model_bid->find($bid_id);
+
+        $trip = $model_trip->find($bid_data['trip']);
 
         $data = array(
             'title' => 'Bid Details',
             'sub_page' => 'bid-details',
 
+            'bid_id' => $bid_id,
             'bid' => $model_bid->get_bid_details($bid_id),
-            'trip' => $model_trip->find($bid_data['trip']),
+            'trip' => $trip,
+            'trip_legs' => $model_trip_legs->where('trip', $trip['id'])->findAll(),
             'customer' => $model_customer->find($bid_data['customer']),
-            'operators' => $model_operator_bid->get_bid_operators_table_data($bid_id)
+            'operators' => $model_operator->findAll(),
+
+            'aircrafts' => $model_aircraft->get_aircrafts_with_category(),
+            'aircraft_categories' => $model_aircraft_category->findAll(),
         );
 
         return view('dashboard/basic', $data);

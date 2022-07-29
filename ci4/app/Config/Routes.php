@@ -38,7 +38,8 @@ $routes->get('/logout', 'Page::logout');
 $routes->get('/operators', 'Page::operators');
 $routes->get('/customers', 'Page::customers');
 $routes->get('/users', 'Page::users');
-$routes->get('/aircrafts', 'Page::aircrafts');
+$routes->get('/aircraft/categories', 'Page::aircraft_categories');
+$routes->get('/aircrafts/(:any)', 'Page::aircrafts/$1');
 $routes->get('/trips', 'Page::trips');
 $routes->get('/bids', 'Page::bids');
 $routes->get('/bid/(:any)/operators', 'Page::bid_operators/$1');
@@ -64,8 +65,14 @@ $routes->group("ajax", function ($routes) {
     $routes->get('user/get/(:any)', 'AjaxUser::get/$1');
     $routes->get('user/delete/(:any)', 'AjaxUser::delete/$1');
 
-    $routes->get('aircraft/all', 'AjaxAircraft::all');
-    $routes->post('aircraft/add', 'AjaxAircraft::add');
+    $routes->get('aircraft/category/all', 'AjaxAircraftCategory::all');
+    $routes->post('aircraft/category/add', 'AjaxAircraftCategory::add');
+    $routes->post('aircraft/category/update', 'AjaxAircraftCategory::update');
+    $routes->get('aircraft/category/get/(:any)', 'AjaxAircraftCategory::get/$1');
+    $routes->get('aircraft/category/delete/(:any)', 'AjaxAircraftCategory::delete/$1');
+
+    $routes->get('aircraft/(:any)/all', 'AjaxAircraft::all/$1');
+    $routes->post('aircraft/(:any)/add', 'AjaxAircraft::add/$1');
     $routes->post('aircraft/update', 'AjaxAircraft::update');
     $routes->get('aircraft/get/(:any)', 'AjaxAircraft::get/$1');
     $routes->get('aircraft/delete/(:any)', 'AjaxAircraft::delete/$1');

@@ -3,20 +3,24 @@
 namespace App\Controllers;
 
 use App\Models\AircraftModel;
+use App\Models\AircraftCategoryModel;
 use Firebase\JWT\JWT;
 
-class AjaxAircraft extends BaseController
+class AjaxAircraftCategory extends BaseController
 {
     protected $helpers = ['form', 'global']; 
 
-    public function all($category_id)
+    public function all()
     {
-        $model = new AircraftModel();
-        $all = $model->where('category', $category_id)->findAll();
+        $model = new AircraftCategoryModel();
+        $model_aircraft = new AircraftModel();
+        $all = $model->findAll();
         $data = array();
         foreach($all as $row) {
+            $aircrafts = $model_aircraft->where('category', $row['id'])->findAll();
             $data[] = array(
                 $row['name'],
+                '<a href="'.base_url('/aircrafts/'.$row['id']).'">View ('.count($aircrafts).")</span>",
                 '<div class="table-col-actions"><span class="text-success tbl-action-btn tbl-action-btn-edit" data-id="'.$row['id'].'">Edit</span><span class="text-danger tbl-action-btn tbl-action-btn-delete" data-id="'.$row['id'].'">Delete</span></div>'
             );
         }
@@ -27,12 +31,11 @@ class AjaxAircraft extends BaseController
         ));
     }
 
-    public function add($category_id)
+    public function add()
     {
-        $model = new AircraftModel();
+        $model = new AircraftCategoryModel();
         $model->insert(array(
             'name' => isset($_POST['name']) ? $_POST['name'] : '',
-            'category' => $category_id
         ));
 
         return $this->response->setJson(array(
@@ -43,9 +46,9 @@ class AjaxAircraft extends BaseController
 
     public function update()
     {
-        $model = new AircraftModel();
+        $model = new AircraftCategoryModel();
         $model->update(isset($_POST['id']) ? $_POST['id'] : '', array(
-            'name' => isset($_POST['name']) ? $_POST['name'] : ''
+            'name' => isset($_POST['name']) ? $_POST['name'] : '',
         ));
 
         return $this->response->setJson(array(
@@ -55,7 +58,7 @@ class AjaxAircraft extends BaseController
 
     public function get($id)
     {
-        $model = new AircraftModel();
+        $model = new AircraftCategoryModel();
         $found = $model->find($id);
         if($found) {
             return $this->response->setJson(array(
@@ -73,9 +76,12 @@ class AjaxAircraft extends BaseController
 
     public function delete($id)
     {
-        $model = new AircraftModel();
+        $model = new AircraftCategoryModel();
         $model->delete($id);
         
+        $model = new AircraftModel();
+        $model->where('category', $id)->delete();
+
         return $this->response->setJson(array(
             'success' => true,
         ));
