@@ -8,6 +8,7 @@ use App\Models\TripOperatorModel;
 use App\Models\OperatorModel;
 use App\Models\CustomerModel;
 use App\Models\AircraftModel;
+use App\Models\AircraftCategoryModel;
 
 use Firebase\JWT\JWT;
 
@@ -85,6 +86,7 @@ class AjaxTrip extends BaseController
         $model->insert(array(
             'customer' => $customer_id,
             'status' => isset($_POST['status']) ? $_POST['status'] : '',
+            'pax' => isset($_POST['pax']) ? $_POST['pax'] : '',
             'date' => date('m/d/Y'),
         ));
 
@@ -131,6 +133,7 @@ class AjaxTrip extends BaseController
         $model->update(isset($_POST['id']) ? $_POST['id'] : '', array(
             'customer' => $customer_id,
             'status' => isset($_POST['status']) ? $_POST['status'] : '',
+            'pax' => isset($_POST['pax']) ? $_POST['pax'] : ''
         ));
 
         $model_legs->where('trip', isset($_POST['id']) ? $_POST['id'] : '')->delete();

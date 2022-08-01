@@ -394,6 +394,15 @@
     }
   })
 
+  $(document).on('change', '#modal_operator_add_bid [name="category_select"]', function() {
+    if($(this).val() == '') {
+      $(modal_customer_add_input_aircraft_category).show();
+    }
+    else {
+      $(modal_customer_add_input_aircraft_category).hide();
+    }
+  })
+
   $(document).on('click', '#modal_operator_add_bid #btn_save', function() {
     var data = {};
     if($('#modal_operator_add_bid [name="operator_option"]:checked').val() == 'exist') {

@@ -8,8 +8,6 @@ use App\Models\CustomerModel;
 use App\Models\TripModel;
 use App\Models\TripLegModel;
 use App\Models\OperatorModel;
-use App\Models\BidModel;
-use App\Models\OperatorBidModel;
 use App\Models\UserModel;
 
 class Page extends BaseController
@@ -169,7 +167,6 @@ class Page extends BaseController
             return redirect()->to('/login');
         }
 
-        $model_bid = new BidModel();
         $model_trip = new TripModel();
         $model_customer = new CustomerModel();
         $model_operator = new OperatorModel();

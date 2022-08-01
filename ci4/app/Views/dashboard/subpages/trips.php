@@ -111,17 +111,30 @@
               </div>
             </div>
           </div>
-          <div class="form-group">
-            <label for="name">Status</label>
-            <select class="form-control" id="status" name="status">
-              <option value="">Select</option>
-              <option value="In Work">In Work</option>
-              <option value="Quoted & Pending">Quoted & Pending</option>
-              <option value="Booked">Booked</option>
-              <option value="Settled">Settled</option>
-              <option value="Closed">Closed</option>
-            </select>
+          <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="name">Status</label>
+                  <select class="form-control" id="status" name="status">
+                    <option value="">Select</option>
+                    <option value="In Work">In Work</option>
+                    <option value="Quoted & Pending">Quoted & Pending</option>
+                    <option value="Booked">Booked</option>
+                    <option value="Settled">Settled</option>
+                    <option value="Closed">Closed</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="pax">Pax <i class="text-danger">*</i></label>
+                  <div class="input-group">
+                      <input type="text" name="pax" id="pax" class="form-control" value="">
+                  </div>
+                </div>
+              </div>
           </div>
+          
           <table class="table table-bordered table-striped text-center">
             <thead>
               <tr>
@@ -181,6 +194,7 @@
   var modal_add_input_customer_telephone = $('#modal_add_trip #customer_new_inputs #telephone');
   
   var modal_add_input_status = $('#modal_add_trip #status');
+  var modal_add_input_pax = $('#modal_add_trip #pax');
   var modal_add_input_legs = $('#modal_add_trip #legs');
   
   var modal_add_input_id = $('#modal_add_trip #trip_id');
@@ -287,6 +301,7 @@
     $(modal_add_input_customer_telephone).val('');
     
     $(modal_add_input_status).val('');
+    $(modal_add_input_pax).val('');
     
     $(modal_add_input_legs).html('');
     addLegRow(null);
@@ -360,6 +375,13 @@
     //   return;
     // }
     data['status'] = $(modal_add_input_status).val();
+
+    if($(modal_add_input_pax).val() == '') {
+      alert('Please Input Pax');
+      $(modal_add_input_pax).focus()
+      return;
+    }
+    data['pax'] = $(modal_add_input_pax).val();
 
     data['legs'] = [];
     var dom_legs = $('#legs tr');
@@ -466,6 +488,13 @@
     // }
     data['status'] = $(modal_add_input_status).val();
 
+    if($(modal_add_input_pax).val() == '') {
+      alert('Please Input Pax');
+      $(modal_add_input_pax).focus()
+      return;
+    }
+    data['pax'] = $(modal_add_input_pax).val();
+
     data['legs'] = [];
     var dom_legs = $('#legs tr');
     for(var index = 0; index < dom_legs.length; index ++) {
@@ -535,6 +564,7 @@
           $(modal_add_input_customer_telephone).val('');
 
           $(modal_add_input_status).val(resp.trip.status);
+          $(modal_add_input_pax).val(resp.trip.pax);
           
           $(modal_add_input_legs).html('');
           if(resp.legs.length > 0) {
