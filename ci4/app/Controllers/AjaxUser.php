@@ -16,7 +16,7 @@ class AjaxUser extends BaseController
         $data = array();
         foreach($all as $row) {
             $data[] = array(
-                $row['name'],
+                $row['username'],
                 $row['email'],
                 $row['status'],
                 $row['role'],
@@ -34,8 +34,9 @@ class AjaxUser extends BaseController
     {
         $model = new UserModel();
         $model->insert(array(
-            'name' => isset($_POST['name']) ? $_POST['name'] : '',
+            'username' => isset($_POST['username']) ? $_POST['username'] : '',
             'email' => isset($_POST['email']) ? $_POST['email'] : '',
+            'password' => isset($_POST['password']) ? $_POST['password'] : '',
             'status' => isset($_POST['status']) ? $_POST['status'] : '',
             'role' => isset($_POST['role']) ? $_POST['role'] : '',
         ));
@@ -50,8 +51,9 @@ class AjaxUser extends BaseController
     {
         $model = new UserModel();
         $model->update(isset($_POST['id']) ? $_POST['id'] : '', array(
-            'name' => isset($_POST['name']) ? $_POST['name'] : '',
+            'username' => isset($_POST['username']) ? $_POST['username'] : '',
             'email' => isset($_POST['email']) ? $_POST['email'] : '',
+            'password' => isset($_POST['password']) ? $_POST['password'] : '',
             'status' => isset($_POST['status']) ? $_POST['status'] : '',
             'role' => isset($_POST['role']) ? $_POST['role'] : '',
         ));

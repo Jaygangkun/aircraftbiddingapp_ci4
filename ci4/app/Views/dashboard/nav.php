@@ -31,36 +31,4 @@
             <p>Trips</p>
         </a>
     </li>
-    <li class="nav-item">
-        <a href="<?= base_url('/bids') ?>" class="nav-link <?php echo isset($sub_page) && $sub_page == 'bids' ? 'active' : '' ?>">
-            <i class="nav-icon fas fa-tachometer-alt"></i>
-            <p>Bids</p>
-        </a>
-    </li>
-    <!-- <li class="nav-item <?php echo isset($sub_page) && ($sub_page == 'bids' || $sub_page == 'customer-bid' || $sub_page == 'operator-bid') ? 'menu-open' : '' ?>">
-        <a href="#" class="nav-link <?php echo isset($sub_page) && ($sub_page == 'bids' || $sub_page == 'customer-bid' || $sub_page == 'operator-bid') ? 'active' : '' ?>">
-            <i class="nav-icon fas fa-tachometer-alt"></i>
-            <p>Bids <i class="fas fa-angle-left right"></i></p>
-        </a>
-        <ul class="nav nav-treeview">
-            <li class="nav-item">
-                <a href="<?= base_url('/bids') ?>" class="nav-link <?php echo isset($sub_page) && $sub_page == 'bids' ? 'active' : '' ?>">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>All</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="<?= base_url('/customer-bid') ?>" class="nav-link <?php echo isset($sub_page) && $sub_page == 'customer-bid' ? 'active' : '' ?>">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Add Customer Bid</p>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="<?= base_url('/operator-bid') ?>" class="nav-link <?php echo isset($sub_page) && $sub_page == 'operator-bid' ? 'active' : '' ?>">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Add Operator Bid</p>
-                </a>
-            </li>
-        </ul>
-    </li> -->
 </ul>

@@ -9,7 +9,19 @@ class UserModel extends Model
 
 	protected $returnType = 'array';
 
-	protected $allowedFields = ['name', 'email', 'status', 'role'];
+	protected $allowedFields = ['username', 'email', 'password', 'status', 'role'];
 
     protected $db;
+
+    public function checkUser($username, $password)
+    {
+        $query = $this->db->query('SELECT * FROM users WHERE username="'.$username.'" AND password="'.$password.'"');
+
+        $result = $query->getResult();
+        if(count($result)) {
+            return $result[0];
+        }
+
+        return null;
+    }
 }

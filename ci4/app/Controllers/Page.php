@@ -10,6 +10,7 @@ use App\Models\TripLegModel;
 use App\Models\OperatorModel;
 use App\Models\BidModel;
 use App\Models\OperatorBidModel;
+use App\Models\UserModel;
 
 class Page extends BaseController
 {
@@ -30,18 +31,29 @@ class Page extends BaseController
                 return view('auth/login');
 			}
 
-            if($this->request->getPost('user_name') != 'admin' || $this->request->getPost('password') != 'admin') {
-				$this->session->setFlashdata('warning', 'User name or password is incorrect');
-                
+            $model = new UserModel();
+            $user = $model->checkUser($this->request->getPost('user_name'), $this->request->getPost('password'));
+
+            if($user == null) {
+                $this->session->setFlashdata('warning', 'User name or password is incorrect');
+
                 return view('auth/login');
-			}
+            }
 
-            $this->session->set('user', array(
-                'role' => 'admin',
-                'name' => 'admin'
-            ));
+            if($user->status == 'deactive') {
+                $this->session->setFlashdata('warning', 'User is deactivate');
 
-			return redirect()->to('/bids');
+                return view('auth/login');
+            }
+            // if($this->request->getPost('user_name') != 'admin' || $this->request->getPost('password') != 'admin') {
+			// 	$this->session->setFlashdata('warning', 'User name or password is incorrect');
+                
+            //     return view('auth/login');
+			// }
+
+            $this->session->set('user', $user);
+
+			return redirect()->to('/trips');
 		}
 		else{
 			$this->session->remove('user');
@@ -56,9 +68,9 @@ class Page extends BaseController
 
     public function operators()
     {
-        // if(!$this->session->has('user')) {
-        //     return redirect()->to('/login');
-        // }
+        if(!$this->session->has('user')) {
+            return redirect()->to('/login');
+        }
 
         $data = array(
             'title' => 'Operators',
@@ -70,6 +82,10 @@ class Page extends BaseController
 
     public function customers()
     {
+        if(!$this->session->has('user')) {
+            return redirect()->to('/login');
+        }
+
         $data = array(
             'title' => 'Customers',
             'sub_page' => 'customers'
@@ -80,6 +96,10 @@ class Page extends BaseController
 
     public function users()
     {
+        if(!$this->session->has('user')) {
+            return redirect()->to('/login');
+        }
+
         $data = array(
             'title' => 'Users',
             'sub_page' => 'users'
@@ -90,6 +110,10 @@ class Page extends BaseController
 
     public function aircraft_categories()
     {
+        if(!$this->session->has('user')) {
+            return redirect()->to('/login');
+        }
+
         $data = array(
             'title' => 'Aircrafts',
             'sub_page' => 'aircraft-categories'
@@ -100,6 +124,10 @@ class Page extends BaseController
 
     public function aircrafts($aircraft_category_id)
     {
+        if(!$this->session->has('user')) {
+            return redirect()->to('/login');
+        }
+
         $model = new AircraftCategoryModel();
         $data = array(
             'title' => 'Aircrafts',
@@ -113,24 +141,18 @@ class Page extends BaseController
 
     public function trips()
     {
-        $data = array(
-            'title' => 'Trips',
-            'sub_page' => 'trips'
-        );
+        if(!$this->session->has('user')) {
+            return redirect()->to('/login');
+        }
 
-        return view('dashboard/basic', $data);
-    }
-
-    public function bids()
-    {
         $model_customer = new CustomerModel();
         $model_trip = new TripModel();
         $model_aircraft = new AircraftModel();
         $model_aircraft_category = new AircraftCategoryModel();
 
         $data = array(
-            'title' => 'Bids',
-            'sub_page' => 'bids',
+            'title' => 'Trips',
+            'sub_page' => 'trips',
 
             'customers' => $model_customer->findAll(),
             'trips' => $model_trip->findAll(),
@@ -141,47 +163,31 @@ class Page extends BaseController
         return view('dashboard/basic', $data);
     }
 
-    public function bid_operators($bid_id)
+    public function trip_details($trip_id)
     {
-        $model_operator = new OperatorModel();
-        $model_aircraft = new AircraftModel();
+        if(!$this->session->has('user')) {
+            return redirect()->to('/login');
+        }
 
-        $data = array(
-            'title' => 'Bid Operators',
-            'sub_page' => 'bid-operators',
-
-            'bid_id' => $bid_id,
-            'aircrafts' => $model_aircraft->findAll(),
-            'operators' => $model_operator->findAll(),
-        );
-
-        return view('dashboard/basic', $data);
-    }
-
-    public function bid_details($bid_id)
-    {
         $model_bid = new BidModel();
         $model_trip = new TripModel();
         $model_customer = new CustomerModel();
         $model_operator = new OperatorModel();
-        $model_operator_bid = new OperatorBidModel();
         $model_trip_legs = new TripLegModel();
         $model_aircraft = new AircraftModel();
         $model_aircraft_category = new AircraftCategoryModel();
 
-        $bid_data = $model_bid->find($bid_id);
-
-        $trip = $model_trip->find($bid_data['trip']);
+        $trip = $model_trip->find($trip_id);
 
         $data = array(
-            'title' => 'Bid Details',
-            'sub_page' => 'bid-details',
+            'title' => 'Trip Details',
+            'sub_page' => 'trip-details',
 
-            'bid_id' => $bid_id,
-            'bid' => $model_bid->get_bid_details($bid_id),
+            'trip_id' => $trip_id,
             'trip' => $trip,
-            'trip_legs' => $model_trip_legs->where('trip', $trip['id'])->findAll(),
-            'customer' => $model_customer->find($bid_data['customer']),
+            'trip_legs' => $model_trip_legs->where('trip', $trip_id)->findAll(),
+            'customer' => $model_customer->find($trip['customer']),
+
             'operators' => $model_operator->findAll(),
 
             'aircrafts' => $model_aircraft->get_aircrafts_with_category(),

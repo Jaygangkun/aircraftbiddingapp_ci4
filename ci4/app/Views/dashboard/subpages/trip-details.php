@@ -46,24 +46,28 @@
       <div class="col-md-3">
         <div class="card card-primary">
           <div class="card-header">
-            <h3 class="card-title">Bid Information</h3>
+            <h3 class="card-title">Customer Information</h3>
           </div>
-          
           <div class="card-body">
             <ul class="nav flex-column">
               <li class="nav-item">
                 <span href="#" class="nav-link">
-                  Pax <span class="float-right"><?php echo $bid[0]->pax?></span>
+                  Name <span class="float-right"><?php echo $customer['name']?></span>
+                </span>
+              </li>
+              <li class="nav-item">
+              <span href="#" class="nav-link">
+                  Company <span class="float-right"><?php echo $customer['company']?></span>
                 </span>
               </li>
               <li class="nav-item">
                 <span href="#" class="nav-link">
-                  Aircraft <span class="float-right"><?php echo $bid[0]->aircraft_name?></span>
+                  Telephone <span class="float-right"><?php echo $customer['telephone']?></span>
                 </span>
               </li>
               <li class="nav-item">
                 <span href="#" class="nav-link">
-                  Status <span class="float-right"><?php echo $bid[0]->status?></span>
+                  Email <span class="float-right"><?php echo $customer['email']?></span>
                 </span>
               </li>
             </ul>
@@ -74,7 +78,6 @@
             <h4 class="card-title">Trip Information</h4>
           </div>
           <div class="card-body">
-            <span class="mb-3"><?php echo $trip['name']?></span>
             <?php
             if(count($trip_legs) > 0) {
               ?>
@@ -107,35 +110,7 @@
             ?>
           </div>
         </div>
-        <div class="card card-primary">
-          <div class="card-header">
-            <h3 class="card-title">Customer Information</h3>
-          </div>
-          <div class="card-body">
-            <ul class="nav flex-column">
-              <li class="nav-item">
-                <span href="#" class="nav-link">
-                  Name <span class="float-right"><?php echo $customer['name']?></span>
-                </span>
-              </li>
-              <li class="nav-item">
-              <span href="#" class="nav-link">
-                  Company <span class="float-right"><?php echo $customer['company']?></span>
-                </span>
-              </li>
-              <li class="nav-item">
-                <span href="#" class="nav-link">
-                  Telephone <span class="float-right"><?php echo $customer['telephone']?></span>
-                </span>
-              </li>
-              <li class="nav-item">
-                <span href="#" class="nav-link">
-                  Email <span class="float-right"><?php echo $customer['email']?></span>
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        
       </div>
     </div>
 
@@ -143,7 +118,7 @@
 </section>
 <!-- /.content -->
 
-<input type="hidden" name="bid_id" id="bid_id" value="<?php echo $bid_id?>">
+<input type="hidden" name="trip_id" id="trip_id" value="<?php echo $trip_id?>">
 <!-- Add or Update Operator Modal -->
 <div class="modal fade" id="modal_operator_add_bid" data-backdrop="static" role="dialog">
   <div class="modal-dialog modal-md">
@@ -285,7 +260,7 @@
           </div>
         </div>
       </div>
-      <input type="hidden" name="operator_bid_id" id="operator_bid_id">
+      <input type="hidden" name="operator_trip_id" id="operator_trip_id">
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" id="btn_save">Save</button>
@@ -323,7 +298,7 @@
     "autoWidth": false,
     "responsive": true,
     'ajax': {
-      url: base_url + '/ajax/bid/<?php echo $bid_id?>/operator/all/'
+      url: base_url + '/ajax/trip/<?php echo $trip_id?>/operator/all/'
     }
   });
 
@@ -363,9 +338,9 @@
   var modal_customer_add_input_aircraft_category = $('#modal_operator_add_bid #aircraft_new_inputs #category');
   var modal_customer_add_input_aircraft_name = $('#modal_operator_add_bid #aircraft_new_inputs #name');
 
-  var modal_operator_add_input_operator_bid_id = $('#modal_operator_add_bid #operator_bid_id');
+  var modal_operator_add_input_operator_trip_id = $('#modal_operator_add_bid #operator_trip_id');
 
-  var hidden_bid_id = $('#bid_id');
+  var hidden_trip_id = $('#trip_id');
 
   $(document).on('click', '#btn_new', function() {
     $(modal_operator_add_btn_save).show();
@@ -505,10 +480,10 @@
 
     data['aircraft_option'] = $('#modal_operator_add_bid [name="aircraft_option"]:checked').val();
 
-    data['bid_id'] = <?php echo $bid_id?>;
+    data['trip_id'] = <?php echo $trip_id?>;
 
     $.ajax({
-      url: base_url + '/ajax/bid/operator/add',
+      url: base_url + '/ajax/trip/operator/add',
       type: 'post',
       dataType: 'json',
       data: data,
@@ -613,11 +588,11 @@
 
     data['aircraft_option'] = $('#modal_operator_add_bid [name="aircraft_option"]:checked').val();
 
-    data['operator_bid_id'] = $(modal_operator_add_input_operator_bid_id).val();
-    data['bid_id'] = <?php echo $bid_id?>;
+    data['operator_trip_id'] = $(modal_operator_add_input_operator_trip_id).val();
+    data['trip_id'] = <?php echo $trip_id?>;
 
     $.ajax({
-      url: base_url + '/ajax/bid/operator/update',
+      url: base_url + '/ajax/trip/operator/update',
       type: 'post',
       dataType: 'json',
       data: data,
@@ -637,12 +612,16 @@
 
   $(document).on('click', '.tbl-action-btn-edit', function() {
     $.ajax({
-      url: base_url + '/ajax/bid/operator/get/' + $(this).data('id'),
+      url: base_url + '/ajax/trip/operator/get/' + $(this).data('id'),
       type: 'get',
       dataType: 'json',
       success: function(resp) {
         if(resp.success) {
           $(modal_operator_add_input_operator_select).val(resp.data.operator);
+          $(modal_operator_add_input_operator_name).val('');
+          $(modal_operator_add_input_operator_telephone).val('');
+          $(modal_operator_add_input_operator_contact).val('');
+
           $(modal_operator_add_input_operator_status).val(resp.data.status);
           $(modal_operator_add_input_pax).val(resp.data.pax);
           $(modal_operator_add_input_cost).val(resp.data.cost);
@@ -661,7 +640,7 @@
           $(modal_customer_add_aircraft_new_inputs).hide();
           $(modal_customer_add_input_aircraft_option_exist).prop('checked', true);
 
-          $(modal_operator_add_input_operator_bid_id).val(resp.data.id);
+          $(modal_operator_add_input_operator_trip_id).val(resp.data.id);
 
           $(modal_operator_add_btn_save).hide();
           $(modal_operator_add_btn_update).show();
@@ -678,7 +657,7 @@
   $(document).on('click', '.tbl-action-btn-delete', function() {
     if(confirm('Are you sure to delete?')) {
       $.ajax({
-        url: base_url + '/ajax/bid/operator/delete/' + $(this).data('id'),
+        url: base_url + '/ajax/trip/operator/delete/' + $(this).data('id'),
         type: 'get',
         dataType: 'json',
         success: function(resp) {

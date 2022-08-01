@@ -31,9 +31,9 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Page::bids');
+$routes->get('/', 'Page::trips');
 $routes->get('/login', 'Page::login');
-// $routes->post('/login', 'Page::login');
+$routes->post('/login', 'Page::login');
 $routes->get('/logout', 'Page::logout');
 $routes->get('/operators', 'Page::operators');
 $routes->get('/customers', 'Page::customers');
@@ -41,9 +41,7 @@ $routes->get('/users', 'Page::users');
 $routes->get('/aircraft/categories', 'Page::aircraft_categories');
 $routes->get('/aircrafts/(:any)', 'Page::aircrafts/$1');
 $routes->get('/trips', 'Page::trips');
-$routes->get('/bids', 'Page::bids');
-$routes->get('/bid/(:any)/operators', 'Page::bid_operators/$1');
-$routes->get('/bid/(:any)/details', 'Page::bid_details/$1');
+$routes->get('/trip/(:any)/details', 'Page::trip_details/$1');
 
 // Ajax Calls
 $routes->group("ajax", function ($routes) {
@@ -83,18 +81,11 @@ $routes->group("ajax", function ($routes) {
     $routes->get('trip/get/(:any)', 'AjaxTrip::get/$1');
     $routes->get('trip/delete/(:any)', 'AjaxTrip::delete/$1');
 
-    $routes->get('bid/all', 'AjaxBid::all');
-    $routes->get('bid/delete/(:any)', 'AjaxBid::delete/$1');
-    $routes->get('bid/get/(:any)', 'AjaxBid::get/$1');
-
-    $routes->post('bid/customer/add', 'AjaxBid::customer_add');
-    $routes->post('bid/customer/update', 'AjaxBid::customer_update');
-
-    $routes->get('bid/(:any)/operator/all', 'AjaxBid::operator_all/$1');
-    $routes->post('bid/operator/add', 'AjaxBid::operator_add');
-    $routes->get('bid/operator/get/(:any)', 'AjaxBid::operator_get/$1');
-    $routes->post('bid/operator/update', 'AjaxBid::operator_update');
-    $routes->get('bid/operator/delete/(:any)', 'AjaxBid::operator_delete/$1');
+    $routes->get('trip/(:any)/operator/all', 'AjaxTrip::operator_all/$1');
+    $routes->post('trip/operator/add', 'AjaxTrip::operator_add');
+    $routes->get('trip/operator/get/(:any)', 'AjaxTrip::operator_get/$1');
+    $routes->post('trip/operator/update', 'AjaxTrip::operator_update');
+    $routes->get('trip/operator/delete/(:any)', 'AjaxTrip::operator_delete/$1');
 });
 
 // APIS

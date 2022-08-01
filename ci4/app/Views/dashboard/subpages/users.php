@@ -52,15 +52,21 @@
       <div class="modal-body">
         <div class="container-fluid">
           <div class="form-group">
-            <label for="name">Name <i class="text-danger">*</i></label>
+            <label for="username">User Name <i class="text-danger">*</i></label>
             <div class="input-group">
-              <input type="text" name="name" id="name" class="form-control" value="">
+              <input type="text" name="username" id="username" class="form-control" value="">
             </div>
           </div>
           <div class="form-group">
             <label for="email">Email <i class="text-danger">*</i></label>
             <div class="input-group">
               <input type="text" name="email" id="email" class="form-control" value="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="password">Password <i class="text-danger">*</i></label>
+            <div class="input-group">
+              <input type="text" name="password" id="password" class="form-control" value="">
             </div>
           </div>
           <div class="form-group">
@@ -106,8 +112,9 @@
   var modal_add_btn_save = $('#modal_add_user #btn_save');
   var modal_add_btn_update = $('#modal_add_user #btn_update');
 
-  var modal_add_input_name = $('#modal_add_user #name');
+  var modal_add_input_username = $('#modal_add_user #username');
   var modal_add_input_email = $('#modal_add_user #email');
+  var modal_add_input_password = $('#modal_add_user #password');
   var modal_add_input_status = $('#modal_add_user #status');
   var modal_add_input_role = $('#modal_add_user #role');
 
@@ -135,8 +142,9 @@
     $(modal_add_btn_save).show();
     $(modal_add_btn_update).hide();
 
-    $(modal_add_input_name).val('');
+    $(modal_add_input_username).val('');
     $(modal_add_input_email).val('');
+    $(modal_add_input_password).val('');
     $(modal_add_input_status).val('');
     $(modal_add_input_role).val('');
 
@@ -144,15 +152,21 @@
   })
 
   $(document).on('click', '#modal_add_user #btn_save', function() {
-    if($(modal_add_input_name).val() == '') {
-      alert('Please Input Name');
-      $(modal_add_input_name).focus()
+    if($(modal_add_input_username).val() == '') {
+      alert('Please Input User Name');
+      $(modal_add_input_username).focus()
       return;
     }
 
     if($(modal_add_input_email).val() == '') {
       alert('Please Input Email');
       $(modal_add_input_email).focus()
+      return;
+    }
+
+    if($(modal_add_input_password).val() == '') {
+      alert('Please Input Password');
+      $(modal_add_input_password).focus()
       return;
     }
 
@@ -173,8 +187,9 @@
       type: 'post',
       dataType: 'json',
       data: {
-        name: $(modal_add_input_name).val(),
+        username: $(modal_add_input_username).val(),
         email: $(modal_add_input_email).val(),
+        password: $(modal_add_input_password).val(),
         status: $(modal_add_input_status).val(),
         role: $(modal_add_input_role).val()
       },
@@ -193,15 +208,21 @@
   })
 
   $(document).on('click', '#modal_add_user #btn_update', function() {
-    if($(modal_add_input_name).val() == '') {
-      alert('Please Input Name');
-      $(modal_add_input_name).focus()
+    if($(modal_add_input_username).val() == '') {
+      alert('Please Input User Name');
+      $(modal_add_input_username).focus()
       return;
     }
 
     if($(modal_add_input_email).val() == '') {
       alert('Please Input Email');
       $(modal_add_input_email).focus()
+      return;
+    }
+
+    if($(modal_add_input_password).val() == '') {
+      alert('Please Input Password');
+      $(modal_add_input_password).focus()
       return;
     }
 
@@ -223,8 +244,9 @@
       dataType: 'json',
       data: {
         id: $(modal_add_input_id).val(),
-        name: $(modal_add_input_name).val(),
+        username: $(modal_add_input_username).val(),
         email: $(modal_add_input_email).val(),
+        password: $(modal_add_input_password).val(),
         status: $(modal_add_input_status).val(),
         role: $(modal_add_input_role).val()
       },
@@ -249,8 +271,9 @@
       dataType: 'json',
       success: function(resp) {
         if(resp.success) {
-          $(modal_add_input_name).val(resp.data.name);
+          $(modal_add_input_username).val(resp.data.username);
           $(modal_add_input_email).val(resp.data.email);
+          $(modal_add_input_password).val(resp.data.password);
           $(modal_add_input_role).val(resp.data.role);
           $(modal_add_input_status).val(resp.data.status);
 

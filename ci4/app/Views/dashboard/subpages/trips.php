@@ -26,6 +26,10 @@
                 <tr>
                   <th>Name</th>
                   <th>Legs</th>
+                  <th>Operators</th>
+                  <th>Aircraft</th>
+                  <th>Pax</th>
+                  <th>Date</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -50,28 +54,73 @@
     <div class="modal-content">
       <div class="modal-body">
         <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="name">Name <i class="text-danger">*</i></label>
-                <div class="input-group">
-                    <input type="text" name="name" id="name" class="form-control" value="">
+          <div class="form-group">
+            <label for="name">Customer <i class="text-danger">*</i></label>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="customer_option" id="customer_option_exist" value="exist" checked>
+                  <label class="form-check-label" for="customer_option_exist">Already Exist</label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="customer_option" id="customer_option_new" value="new">
+                  <label class="form-check-label" for="customer_option_new">Add New</label>
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
+          </div>
+          <div id="customer_exist_inputs">
               <div class="form-group">
-                <label for="name">Status</label>
-                <select class="form-control" id="status" name="status">
+                <select class="form-control" id="customer_select" name="customer_select">
                   <option value="">Select</option>
-                  <option value="In Work">In Work</option>
-                  <option value="Quoted & Pending">Quoted & Pending</option>
-                  <option value="Booked">Booked</option>
-                  <option value="Settled">Settled</option>
-                  <option value="Closed">Closed</option>
+                  <?php
+                  foreach($customers as $customer) {
+                    ?>
+                    <option value="<?php echo $customer['id']?>"><?php echo $customer['name']?></option>
+                    <?php
+                  }
+                  ?>                
                 </select>
               </div>
+          </div>
+          <div id="customer_new_inputs" style="display: none">
+            <div class="form-group">
+              <label for="name">Name <i class="text-danger">*</i></label>
+              <div class="input-group">
+                  <input type="text" name="name" id="name" class="form-control" value="">
+              </div>
             </div>
+            <div class="form-group">
+              <label for="company">Company</label>
+              <div class="input-group">
+                  <input type="text" name="company" id="company" class="form-control" value="">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <div class="input-group">
+                  <input type="text" name="email" id="email" class="form-control" value="">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="telephone">Telephone</label>
+              <div class="input-group">
+                  <input type="text" name="telephone" id="telephone" class="form-control" value="">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="name">Status</label>
+            <select class="form-control" id="status" name="status">
+              <option value="">Select</option>
+              <option value="In Work">In Work</option>
+              <option value="Quoted & Pending">Quoted & Pending</option>
+              <option value="Booked">Booked</option>
+              <option value="Settled">Settled</option>
+              <option value="Closed">Closed</option>
+            </select>
           </div>
           <table class="table table-bordered table-striped text-center">
             <thead>
@@ -119,7 +168,18 @@
   var modal_add_btn_save = $('#modal_add_trip #btn_save');
   var modal_add_btn_update = $('#modal_add_trip #btn_update');
 
-  var modal_add_input_name = $('#modal_add_trip #name');
+  var modal_add_customer_exist_inputs = $('#modal_add_trip #customer_exist_inputs');
+  var modal_add_customer_new_inputs = $('#modal_add_trip #customer_new_inputs');
+  var modal_add_input_customer_option = $('#modal_add_trip [name="customer_option"]');
+  var modal_add_input_customer_option_exist = $('#modal_add_trip #customer_option_exist');
+  var modal_add_input_customer_option_new = $('#modal_add_trip #customer_option_new');
+
+  var modal_add_input_customer_select = $('#modal_add_trip #customer_exist_inputs #customer_select');
+  var modal_add_input_customer_name = $('#modal_add_trip #customer_new_inputs #name');
+  var modal_add_input_customer_company = $('#modal_add_trip #customer_new_inputs #company');
+  var modal_add_input_customer_email = $('#modal_add_trip #customer_new_inputs #email');
+  var modal_add_input_customer_telephone = $('#modal_add_trip #customer_new_inputs #telephone');
+  
   var modal_add_input_status = $('#modal_add_trip #status');
   var modal_add_input_legs = $('#modal_add_trip #legs');
   
@@ -220,13 +280,33 @@
     $(modal_add_btn_save).show();
     $(modal_add_btn_update).hide();
 
-    $(modal_add_input_name).val('');
+    $(modal_add_input_customer_select).val('');
+    $(modal_add_input_customer_name).val('');
+    $(modal_add_input_customer_company).val('');
+    $(modal_add_input_customer_email).val('');
+    $(modal_add_input_customer_telephone).val('');
+    
     $(modal_add_input_status).val('');
     
     $(modal_add_input_legs).html('');
     addLegRow(null);
 
+    $(modal_add_customer_exist_inputs).show();
+    $(modal_add_customer_new_inputs).hide();
+    $(modal_add_input_customer_option_exist).prop('checked', true);
+
     $(modal_add).modal('show');
+  })
+
+  $(document).on('change', '#modal_add_trip [name="customer_option"]', function() {
+    if($(this).val() == 'exist') {
+      $(modal_add_customer_exist_inputs).show();
+      $(modal_add_customer_new_inputs).hide();
+    }
+    else {
+      $(modal_add_customer_exist_inputs).hide();
+      $(modal_add_customer_new_inputs).show();
+    }
   })
 
   $(document).on('click', '#modal_add_trip #btn_add_leg', function() {
@@ -235,12 +315,44 @@
 
   $(document).on('click', '#modal_add_trip #btn_save', function() {
     var data = {};
-    if($(modal_add_input_name).val() == '') {
-      alert('Please Input Name');
-      $(modal_add_input_name).focus()
-      return;
+    if($('#modal_add_trip [name="customer_option"]:checked').val() == 'exist') {
+      if($(modal_add_input_customer_select).val() == '') {
+        alert('Please Select Customer');
+        $(modal_add_input_customer_select).focus() ;
+        return;
+      }
+      data['customer_id'] = $(modal_add_input_customer_select).val();
     }
-    data['name'] = $(modal_add_input_name).val();
+    else {
+      if($(modal_add_input_customer_name).val() == '') {
+        alert('Please Input Customer Name');
+        $(modal_add_input_customer_name).focus()
+        return;
+      }
+      data['customer_name'] = $(modal_add_input_customer_name).val();
+
+      // if($(modal_customer_add_input_customer_company).val() == '') {
+      //   alert('Please Input Customer Company');
+      //   $(modal_customer_add_input_customer_company).focus()
+      //   return;
+      // }
+      data['customer_company'] = $(modal_add_input_customer_company).val();
+
+      // if($(modal_customer_add_input_customer_email).val() == '') {
+      //   alert('Please Input Customer Email');
+      //   $(modal_customer_add_input_customer_email).focus()
+      //   return;
+      // }
+      data['customer_email'] = $(modal_add_input_customer_email).val();
+
+      // if($(modal_customer_add_input_customer_telephone).val() == '') {
+      //   alert('Please Input Customer Telephone');
+      //   $(modal_customer_add_input_customer_telephone).focus()
+      //   return;
+      // }
+      data['customer_telephone'] = $(modal_add_input_customer_telephone).val();
+    }
+    data['customer_option'] = $('#modal_add_trip [name="customer_option"]:checked').val();
 
     // if($(modal_add_input_status).val() == '') {
     //   alert('Please Choose Status');
@@ -308,13 +420,45 @@
     var data = {};
     data['id'] = $(modal_add_input_id).val();
 
-    if($(modal_add_input_name).val() == '') {
-      alert('Please Input Name');
-      $(modal_add_input_name).focus()
-      return;
+    if($('#modal_add_trip [name="customer_option"]:checked').val() == 'exist') {
+      if($(modal_add_input_customer_select).val() == '') {
+        alert('Please Select Customer');
+        $(modal_add_input_customer_select).focus() ;
+        return;
+      }
+      data['customer_id'] = $(modal_add_input_customer_select).val();
     }
-    data['name'] = $(modal_add_input_name).val();
+    else {
+      if($(modal_add_input_customer_name).val() == '') {
+        alert('Please Input Customer Name');
+        $(modal_add_input_customer_name).focus()
+        return;
+      }
+      data['customer_name'] = $(modal_add_input_customer_name).val();
 
+      // if($(modal_customer_add_input_customer_company).val() == '') {
+      //   alert('Please Input Customer Company');
+      //   $(modal_customer_add_input_customer_company).focus()
+      //   return;
+      // }
+      data['customer_company'] = $(modal_add_input_customer_company).val();
+
+      // if($(modal_customer_add_input_customer_email).val() == '') {
+      //   alert('Please Input Customer Email');
+      //   $(modal_customer_add_input_customer_email).focus()
+      //   return;
+      // }
+      data['customer_email'] = $(modal_add_input_customer_email).val();
+
+      // if($(modal_customer_add_input_customer_telephone).val() == '') {
+      //   alert('Please Input Customer Telephone');
+      //   $(modal_customer_add_input_customer_telephone).focus()
+      //   return;
+      // }
+      data['customer_telephone'] = $(modal_add_input_customer_telephone).val();
+    }
+    data['customer_option'] = $('#modal_add_trip [name="customer_option"]:checked').val();
+    
     // if($(modal_add_input_status).val() == '') {
     //   alert('Please Choose Status');
     //   $(modal_add_input_status).focus()
@@ -384,7 +528,12 @@
       dataType: 'json',
       success: function(resp) {
         if(resp.success) {
-          $(modal_add_input_name).val(resp.trip.name);
+          $(modal_add_input_customer_select).val(resp.trip.customer);
+          $(modal_add_input_customer_name).val('');
+          $(modal_add_input_customer_company).val('');
+          $(modal_add_input_customer_email).val('');
+          $(modal_add_input_customer_telephone).val('');
+
           $(modal_add_input_status).val(resp.trip.status);
           
           $(modal_add_input_legs).html('');

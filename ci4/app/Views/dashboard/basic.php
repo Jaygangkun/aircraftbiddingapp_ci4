@@ -101,7 +101,7 @@
 				<!-- Notifications Dropdown Menu -->
 				<li class="nav-item dropdown">
 				<a class="nav-link" data-toggle="dropdown" href="#">
-					<?php echo isset($_SESSION['user']) ? $_SESSION['user']['name'] : ''?> &nbsp;&nbsp;
+					<?php echo isset($_SESSION['user']) ? $_SESSION['user']->username : ''?> &nbsp;&nbsp;
 					<i class="fas fa-user"></i>
 				</a>
 				<div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
