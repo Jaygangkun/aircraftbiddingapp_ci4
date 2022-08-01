@@ -9,7 +9,7 @@ class TripModel extends Model
 
 	protected $returnType = 'array';
 
-	protected $allowedFields = ['name', 'customer', 'date', 'pax', 'aircraft', 'status'];
+	protected $allowedFields = ['name', 'customer', 'date', 'pax', 'aircraft_category', 'note', 'status'];
 
     protected $db;
 

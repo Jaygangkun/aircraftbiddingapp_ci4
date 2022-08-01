@@ -182,6 +182,7 @@ class Page extends BaseController
 
             'trip_id' => $trip_id,
             'trip' => $trip,
+            'aircraft_category' => $model_aircraft_category->find($trip['aircraft_category']),
             'trip_legs' => $model_trip_legs->where('trip', $trip_id)->findAll(),
             'customer' => $model_customer->find($trip['customer']),
 

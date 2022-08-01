@@ -78,6 +78,23 @@
             <h4 class="card-title">Trip Information</h4>
           </div>
           <div class="card-body">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <span href="#" class="nav-link">
+                  Aircraft Category<span class="float-right"><?php echo $aircraft_category ? $aircraft_category['name'] : ''?></span>
+                </span>
+              </li>
+              <li class="nav-item">
+              <span href="#" class="nav-link">
+                  Pax <span class="float-right"><?php echo $trip ? $trip['pax'] : ''?></span>
+                </span>
+              </li>
+              <li class="nav-item">
+                <span href="#" class="nav-link">
+                  Status <span class="float-right"><?php echo $trip ? $trip['status'] : ''?></span>
+                </span>
+              </li>
+            </ul>
             <?php
             if(count($trip_legs) > 0) {
               ?>
@@ -108,6 +125,11 @@
               <?php
             }
             ?>
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <?php echo $trip['note']?>
+              </li>
+            </ul>
           </div>
         </div>
         

@@ -23,6 +23,7 @@ class AjaxTrip extends BaseController
         $model_operators = new TripOperatorModel();
         $model_aircrafts = new AircraftModel();
         $model_customers = new CustomerModel();
+        $model_aircraft_category = new CustomerModel();
 
         $all = $model->findAll();
         $data = array();
@@ -35,9 +36,9 @@ class AjaxTrip extends BaseController
 
             $operators = $model_operators->where('trip', $row['id'])->findAll(); 
 
-            $aircraft = null;
-            if($row['aircraft']) {
-                $aircraft = $model_aircrafts->get_aircraft_with_category_by_id($row['aircraft']);
+            $aircraft_category = null;
+            if($row['aircraft_category']) {
+                $aircraft_category = $model_aircraft_category->find($row['aircraft_category']);
             }
 
             $customer = null;
@@ -50,7 +51,7 @@ class AjaxTrip extends BaseController
                 $customer ? '<a href="'.base_url('/trip/'.$row['id'].'/details').'">'.$customer['name'].'</a>' : '',
                 $row_legs,
                 count($operators),
-                $aircraft ? ($aircraft->name.($aircraft->aircraft_category_name != '' ? ' (<a href="'.base_url('/aircrafts/'.$aircraft->category).'">'.$aircraft->aircraft_category_name.'</a>)' : '')) : '',
+                $aircraft_category ? '<a href="'.base_url('/aircrafts/'.$aircraft_category['id']).'">'.$aircraft_category['name'].'</a>' : '',
                 $row['pax'],
                 $row['date'],
                 $row['status'],
@@ -87,6 +88,8 @@ class AjaxTrip extends BaseController
             'customer' => $customer_id,
             'status' => isset($_POST['status']) ? $_POST['status'] : '',
             'pax' => isset($_POST['pax']) ? $_POST['pax'] : '',
+            'aircraft_category' => isset($_POST['aircraft_category']) ? $_POST['aircraft_category'] : '',
+            'note' => isset($_POST['note']) ? $_POST['note'] : '',
             'date' => date('m/d/Y'),
         ));
 
@@ -133,7 +136,9 @@ class AjaxTrip extends BaseController
         $model->update(isset($_POST['id']) ? $_POST['id'] : '', array(
             'customer' => $customer_id,
             'status' => isset($_POST['status']) ? $_POST['status'] : '',
-            'pax' => isset($_POST['pax']) ? $_POST['pax'] : ''
+            'pax' => isset($_POST['pax']) ? $_POST['pax'] : '',
+            'aircraft_category' => isset($_POST['aircraft_category']) ? $_POST['aircraft_category'] : '',
+            'note' => isset($_POST['note']) ? $_POST['note'] : ''
         ));
 
         $model_legs->where('trip', isset($_POST['id']) ? $_POST['id'] : '')->delete();

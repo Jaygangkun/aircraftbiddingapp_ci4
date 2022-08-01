@@ -27,7 +27,7 @@
                   <th>Name</th>
                   <th>Legs</th>
                   <th>Operators</th>
-                  <th>Aircraft</th>
+                  <th>Aircraft Category</th>
                   <th>Pax</th>
                   <th>Date</th>
                   <th>Status</th>
@@ -125,14 +125,6 @@
                   </select>
                 </div>
               </div>
-              <div class="col-6">
-                <div class="form-group">
-                  <label for="pax">Pax <i class="text-danger">*</i></label>
-                  <div class="input-group">
-                      <input type="text" name="pax" id="pax" class="form-control" value="">
-                  </div>
-                </div>
-              </div>
           </div>
           
           <table class="table table-bordered table-striped text-center">
@@ -148,11 +140,39 @@
             <tbody id="legs">
             </tbody>                  
           </table>
-          
           <div class="row">
             <div class="col-md-12 text-right">
               <span class="text-primary text-btn" id="btn_add_leg">Add Another</span>
             </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="aircraft_category">Aircraft Category <i class="text-danger">*</i></label>
+                <select class="form-control" id="aircraft_category" name="aircraft_category">
+                  <option value="">Select</option>
+                  <?php
+                  foreach($aircraft_categories as $aircraft_category) {
+                    ?>
+                    <option value="<?php echo $aircraft_category['id']?>"><?php echo $aircraft_category['name']?></option>
+                    <?php
+                  }
+                  ?>
+                </select>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label for="pax">Pax <i class="text-danger">*</i></label>
+                <div class="input-group">
+                    <input type="text" name="pax" id="pax" class="form-control" value="">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="note">Note</label>
+            <textarea class="form-control" name="note" id="note"></textarea>
           </div>
         </div>
       </div>
@@ -194,6 +214,8 @@
   var modal_add_input_customer_telephone = $('#modal_add_trip #customer_new_inputs #telephone');
   
   var modal_add_input_status = $('#modal_add_trip #status');
+  var modal_add_input_aircraft_category = $('#modal_add_trip #aircraft_category');
+  var modal_add_input_note = $('#modal_add_trip #note');
   var modal_add_input_pax = $('#modal_add_trip #pax');
   var modal_add_input_legs = $('#modal_add_trip #legs');
   
@@ -302,6 +324,8 @@
     
     $(modal_add_input_status).val('');
     $(modal_add_input_pax).val('');
+    $(modal_add_input_aircraft_category).val('');
+    $(modal_add_input_note).val('');
     
     $(modal_add_input_legs).html('');
     addLegRow(null);
@@ -376,12 +400,21 @@
     // }
     data['status'] = $(modal_add_input_status).val();
 
+    if($(modal_add_input_aircraft_category).val() == '') {
+      alert('Please Choose Aircraft Category');
+      $(modal_add_input_aircraft_category).focus()
+      return;
+    }
+    data['aircraft_category'] = $(modal_add_input_aircraft_category).val();
+
     if($(modal_add_input_pax).val() == '') {
       alert('Please Input Pax');
       $(modal_add_input_pax).focus()
       return;
     }
     data['pax'] = $(modal_add_input_pax).val();
+
+    data['note'] = $(modal_add_input_note).val();
 
     data['legs'] = [];
     var dom_legs = $('#legs tr');
@@ -488,12 +521,21 @@
     // }
     data['status'] = $(modal_add_input_status).val();
 
+    if($(modal_add_input_aircraft_category).val() == '') {
+      alert('Please Choose Aircraft Category');
+      $(modal_add_input_aircraft_category).focus()
+      return;
+    }
+    data['aircraft_category'] = $(modal_add_input_aircraft_category).val();
+
     if($(modal_add_input_pax).val() == '') {
       alert('Please Input Pax');
       $(modal_add_input_pax).focus()
       return;
     }
     data['pax'] = $(modal_add_input_pax).val();
+
+    data['note'] = $(modal_add_input_note).val();
 
     data['legs'] = [];
     var dom_legs = $('#legs tr');
@@ -565,6 +607,8 @@
 
           $(modal_add_input_status).val(resp.trip.status);
           $(modal_add_input_pax).val(resp.trip.pax);
+          $(modal_add_input_aircraft_category).val(resp.trip.aircraft_category);
+          $(modal_add_input_note).val(resp.trip.note);
           
           $(modal_add_input_legs).html('');
           if(resp.legs.length > 0) {
