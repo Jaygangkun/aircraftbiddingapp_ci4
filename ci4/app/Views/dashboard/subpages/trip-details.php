@@ -29,9 +29,9 @@
                   <thead>
                     <tr>
                       <th>Name</th>
+                      <th>Aircraft</th>
                       <th>Pax</th>
                       <th>Cost</th>
-                      <th>Aircraft</th>
                       <th>Status</th>
                       <th>Action</th>    
                     </tr>
@@ -186,15 +186,21 @@
               </div>
             </div>
             <div class="form-group">
+              <label for="contact">Contact <i class="text-danger">*</i></label>
+              <div class="input-group">
+                  <input type="text" name="contact" id="contact" class="form-control" value="">
+              </div>
+            </div>
+            <div class="form-group">
               <label for="telephone">Telephone <i class="text-danger">*</i></label>
               <div class="input-group">
                   <input type="text" name="telephone" id="telephone" class="form-control" value="">
               </div>
             </div>
             <div class="form-group">
-              <label for="contact">Contact <i class="text-danger">*</i></label>
+              <label for="email">Email</label>
               <div class="input-group">
-                  <input type="text" name="contact" id="contact" class="form-control" value="">
+                  <input type="text" name="email" id="email" class="form-control" value="">
               </div>
             </div>
           </div>
@@ -305,11 +311,6 @@
   var modal_add_btn_save = $('#modal_add_operator #btn_save');
   var modal_add_btn_update = $('#modal_add_operator #btn_update');
 
-  var modal_add_input_name = $('#modal_add_operator #name');
-  var modal_add_input_telephone = $('#modal_add_operator #telephone');
-  var modal_add_input_contact = $('#modal_add_operator #contact');
-  var modal_add_input_id = $('#modal_add_operator #operator_id');
-
   var table = $('#bid_operators').DataTable({
     "pagingType": 'full_numbers',
     "paging": true,
@@ -344,6 +345,7 @@
   var modal_operator_add_input_operator_name = $('#modal_operator_add_bid #operator_new_inputs #name');
   var modal_operator_add_input_operator_telephone = $('#modal_operator_add_bid #operator_new_inputs #telephone');
   var modal_operator_add_input_operator_contact = $('#modal_operator_add_bid #operator_new_inputs #contact');
+  var modal_operator_add_input_operator_email = $('#modal_operator_add_bid #operator_new_inputs #email');
 
   var modal_operator_add_input_operator_status = $('#modal_operator_add_bid #operator_status');
   var modal_operator_add_input_pax = $('#modal_operator_add_bid #pax');
@@ -372,6 +374,7 @@
     $(modal_operator_add_input_operator_name).val('');
     $(modal_operator_add_input_operator_telephone).val('');
     $(modal_operator_add_input_operator_contact).val('');
+    $(modal_operator_add_input_operator_email).val('');
 
     $(modal_operator_add_input_operator_status).val('');
     $(modal_operator_add_input_pax).val('');
@@ -456,6 +459,8 @@
         return;
       }
       data['operator_contact'] = $(modal_operator_add_input_operator_contact).val();
+
+      data['operator_email'] = $(modal_operator_add_input_operator_email).val();
     }
     data['operator_option'] = $('#modal_operator_add_bid [name="operator_option"]:checked').val();
 
@@ -564,6 +569,8 @@
         return;
       }
       data['operator_contact'] = $(modal_operator_add_input_operator_contact).val();
+
+      data['operator_email'] = $(modal_operator_add_input_operator_email).val();
     }
     data['operator_option'] = $('#modal_operator_add_bid [name="operator_option"]:checked').val();
 
@@ -652,6 +659,7 @@
           $(modal_operator_add_input_operator_name).val('');
           $(modal_operator_add_input_operator_telephone).val('');
           $(modal_operator_add_input_operator_contact).val('');
+          $(modal_operator_add_input_operator_email).val('');
 
           $(modal_operator_add_input_operator_status).val(resp.data.status);
           $(modal_operator_add_input_pax).val(resp.data.pax);

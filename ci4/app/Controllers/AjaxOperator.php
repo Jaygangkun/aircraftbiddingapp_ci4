@@ -17,8 +17,9 @@ class AjaxOperator extends BaseController
         foreach($all as $row) {
             $data[] = array(
                 $row['name'],
-                $row['telephone'],
                 $row['contact'],
+                $row['telephone'],
+                $row['email'],
                 '<div class="table-col-actions"><span class="text-success tbl-action-btn tbl-action-btn-edit" data-id="'.$row['id'].'">Edit</span><span class="text-danger tbl-action-btn tbl-action-btn-delete" data-id="'.$row['id'].'">Delete</span></div>'
             );
         }
@@ -36,6 +37,7 @@ class AjaxOperator extends BaseController
             'name' => isset($_POST['name']) ? $_POST['name'] : '',
             'telephone' => isset($_POST['telephone']) ? $_POST['telephone'] : '',
             'contact' => isset($_POST['contact']) ? $_POST['contact'] : '',
+            'email' => isset($_POST['email']) ? $_POST['email'] : '',
         ));
 
         return $this->response->setJson(array(
@@ -51,6 +53,7 @@ class AjaxOperator extends BaseController
             'name' => isset($_POST['name']) ? $_POST['name'] : '',
             'telephone' => isset($_POST['telephone']) ? $_POST['telephone'] : '',
             'contact' => isset($_POST['contact']) ? $_POST['contact'] : '',
+            'email' => isset($_POST['email']) ? $_POST['email'] : '',
         ));
 
         return $this->response->setJson(array(

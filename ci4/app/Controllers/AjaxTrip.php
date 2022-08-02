@@ -23,7 +23,7 @@ class AjaxTrip extends BaseController
         $model_operators = new TripOperatorModel();
         $model_aircrafts = new AircraftModel();
         $model_customers = new CustomerModel();
-        $model_aircraft_category = new CustomerModel();
+        $model_aircraft_category = new AircraftCategoryModel();
 
         $all = $model->findAll();
         $data = array();
@@ -205,10 +205,9 @@ class AjaxTrip extends BaseController
 
             $data[] = array(
                 $row->operator_name,
+                $row->aircraft_name.($row->aircraft_category_name != '' ? ' (<a href="'.base_url('/aircrafts/'.$row->aircraft_category_id).'">'.$row->aircraft_category_name.'</a>)' : ''),
                 $row->pax,
                 $row->cost,
-                $row->aircraft_name.($row->aircraft_category_name != '' ? ' (<a href="'.base_url('/aircrafts/'.$row->aircraft_category_id).'">'.$row->aircraft_category_name.'</a>)' : ''),
-
                 $row->status,
                 '<div class="table-col-actions"><span class="text-success tbl-action-btn tbl-action-btn-edit" data-id="'.$row->id.'">Edit</span><span class="text-danger tbl-action-btn tbl-action-btn-delete" data-id="'.$row->id.'">Delete</span></div>'
             );
@@ -248,7 +247,8 @@ class AjaxTrip extends BaseController
             $model->insert(array(
                 'name' => isset($_POST['operator_name']) ? $_POST['operator_name'] : '',
                 'telephone' => isset($_POST['operator_telephone']) ? $_POST['operator_telephone'] : '',
-                'contact' => isset($_POST['operator_contact']) ? $_POST['operator_contact'] : ''
+                'contact' => isset($_POST['operator_contact']) ? $_POST['operator_contact'] : '',
+                'email' => isset($_POST['operator_email']) ? $_POST['operator_email'] : '',
             ));
 
             $operator_id = $model->getInsertID();
@@ -311,7 +311,8 @@ class AjaxTrip extends BaseController
             $model->insert(array(
                 'name' => isset($_POST['operator_name']) ? $_POST['operator_name'] : '',
                 'telephone' => isset($_POST['operator_telephone']) ? $_POST['operator_telephone'] : '',
-                'contact' => isset($_POST['operator_contact']) ? $_POST['operator_contact'] : ''
+                'contact' => isset($_POST['operator_contact']) ? $_POST['operator_contact'] : '',
+                'email' => isset($_POST['operator_email']) ? $_POST['operator_email'] : ''
             ));
 
             $operator_id = $model->getInsertID();

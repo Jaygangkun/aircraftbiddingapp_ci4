@@ -25,8 +25,9 @@
               <thead>
                 <tr>
                   <th>Name</th>
-                  <th>Telephone Number</th>
                   <th>Contact</th>
+                  <th>Telephone Number</th>
+                  <th>Email</th>
                   <th>Action</th>                    
                 </tr>
               </thead>
@@ -57,15 +58,21 @@
             </div>
           </div>
           <div class="form-group">
+            <label for="contact">Contact <i class="text-danger">*</i></label>
+            <div class="input-group">
+                <input type="text" name="contact" id="contact" class="form-control" value="">
+            </div>
+          </div>
+          <div class="form-group">
             <label for="telephone">Telephone <i class="text-danger">*</i></label>
             <div class="input-group">
                 <input type="text" name="telephone" id="telephone" class="form-control" value="">
             </div>
           </div>
           <div class="form-group">
-            <label for="contact">Contact <i class="text-danger">*</i></label>
+            <label for="email">Email</label>
             <div class="input-group">
-                <input type="text" name="contact" id="contact" class="form-control" value="">
+                <input type="text" name="email" id="email" class="form-control" value="">
             </div>
           </div>
         </div>
@@ -97,6 +104,7 @@
   var modal_add_input_name = $('#modal_add_operator #name');
   var modal_add_input_telephone = $('#modal_add_operator #telephone');
   var modal_add_input_contact = $('#modal_add_operator #contact');
+  var modal_add_input_email = $('#modal_add_operator #email');
   var modal_add_input_id = $('#modal_add_operator #operator_id');
 
   var table = $('#operators').DataTable({
@@ -124,6 +132,7 @@
     $(modal_add_input_name).val('');
     $(modal_add_input_telephone).val('');
     $(modal_add_input_contact).val('');
+    $(modal_add_input_email).val('');
 
     $(modal_add).modal('show');
   })
@@ -154,7 +163,8 @@
       data: {
         name: $(modal_add_input_name).val(),
         telephone: $(modal_add_input_telephone).val(),
-        contact: $(modal_add_input_contact).val()
+        contact: $(modal_add_input_contact).val(),
+        email: $(modal_add_input_email).val(),
       },
       success: function(resp) {
         if(resp.success) {
@@ -197,7 +207,8 @@
         id: $(modal_add_input_id).val(),
         name: $(modal_add_input_name).val(),
         telephone: $(modal_add_input_telephone).val(),
-        contact: $(modal_add_input_contact).val()
+        contact: $(modal_add_input_contact).val(),
+        email: $(modal_add_input_email).val(),
       },
       success: function(resp) {
         if(resp.success) {
@@ -223,6 +234,7 @@
           $(modal_add_input_name).val(resp.data.name);
           $(modal_add_input_telephone).val(resp.data.telephone);
           $(modal_add_input_contact).val(resp.data.contact);
+          $(modal_add_input_email).val(resp.data.email);
 
           $(modal_add_input_id).val(resp.data.id);
 

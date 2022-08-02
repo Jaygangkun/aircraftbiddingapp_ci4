@@ -9,7 +9,7 @@ class OperatorModel extends Model
 
 	protected $returnType = 'array';
 
-	protected $allowedFields = ['name', 'telephone', 'contact'];
+	protected $allowedFields = ['name', 'telephone', 'contact', 'email'];
 
     protected $db;
 

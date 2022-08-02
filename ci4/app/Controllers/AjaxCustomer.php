@@ -17,7 +17,7 @@ class AjaxCustomer extends BaseController
         foreach($all as $row) {
             $data[] = array(
                 $row['name'],
-                $row['telephone'],
+                $row['company'],
                 $row['email'],
                 $row['telephone'],
                 '<div class="table-col-actions"><span class="text-success tbl-action-btn tbl-action-btn-edit" data-id="'.$row['id'].'">Edit</span><span class="text-danger tbl-action-btn tbl-action-btn-delete" data-id="'.$row['id'].'">Delete</span></div>'
