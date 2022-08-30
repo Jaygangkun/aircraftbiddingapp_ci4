@@ -152,10 +152,10 @@ class Page extends BaseController
             'title' => 'Trips',
             'sub_page' => 'trips',
 
-            'customers' => $model_customer->findAll(),
+            'customers' => $model_customer->orderBy('name', 'asc')->findAll(),
             'trips' => $model_trip->findAll(),
             'aircrafts' => $model_aircraft->get_aircrafts_with_category(),
-            'aircraft_categories' => $model_aircraft_category->findAll(),
+            'aircraft_categories' => $model_aircraft_category->orderBy('name', 'asc')->findAll(),
         );
 
         return view('dashboard/basic', $data);
@@ -186,10 +186,10 @@ class Page extends BaseController
             'trip_legs' => $model_trip_legs->where('trip', $trip_id)->findAll(),
             'customer' => $model_customer->find($trip['customer']),
 
-            'operators' => $model_operator->findAll(),
+            'operators' => $model_operator->orderBy('name', 'asc')->findAll(),
 
             'aircrafts' => $model_aircraft->get_aircrafts_with_category(),
-            'aircraft_categories' => $model_aircraft_category->findAll(),
+            'aircraft_categories' => $model_aircraft_category->orderBy('name', 'asc')->findAll(),
         );
 
         return view('dashboard/basic', $data);

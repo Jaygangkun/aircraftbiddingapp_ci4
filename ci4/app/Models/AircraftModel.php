@@ -15,7 +15,7 @@ class AircraftModel extends Model
 
     public function get_aircrafts_with_category()
     {
-        $query = $this->db->query('SELECT aircrafts.*, aircraft_categories.name AS aircraft_category_name FROM aircrafts LEFT JOIN aircraft_categories ON aircrafts.category=aircraft_categories.id');
+        $query = $this->db->query('SELECT aircrafts.*, aircraft_categories.name AS aircraft_category_name FROM aircrafts LEFT JOIN aircraft_categories ON aircrafts.category=aircraft_categories.id ORDER BY aircrafts.name ASC');
         return $query->getResult();
     }
 
