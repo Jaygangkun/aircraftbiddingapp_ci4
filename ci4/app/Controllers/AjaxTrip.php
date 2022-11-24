@@ -25,7 +25,56 @@ class AjaxTrip extends BaseController
         $model_customers = new CustomerModel();
         $model_aircraft_category = new AircraftCategoryModel();
 
-        $all = $model->findAll();
+        $all = $model->where('status !=', 'Closed')->findAll();
+        $data = array();
+        foreach($all as $row) {
+            $row_legs = '';
+            $legs = $model_legs->where('trip', $row['id'])->findAll();
+            foreach($legs as $leg) {
+                $row_legs .= '<div><span class="text-primary">'.$leg['from'].'</span> - <span class="text-primary">'.$leg['to'].'</span>  <span class="text-success">'.$leg['date'].'</span> <span class="text-success">'.$leg['time'].'</span></div>';
+            }
+
+            $operators = $model_operators->where('trip', $row['id'])->findAll(); 
+
+            $aircraft_category = null;
+            if($row['aircraft_category']) {
+                $aircraft_category = $model_aircraft_category->find($row['aircraft_category']);
+            }
+
+            $customer = null;
+            if($row['customer']) {
+                $customer = $model_customers->find($row['customer']);
+            }
+            
+            
+            $data[] = array(
+                $customer ? '<a href="'.base_url('/trip/'.$row['id'].'/details').'">'.$customer['name'].'</a>' : '',
+                $row_legs,
+                count($operators),
+                $aircraft_category ? '<a href="'.base_url('/aircrafts/'.$aircraft_category['id']).'">'.$aircraft_category['name'].'</a>' : '',
+                $row['pax'],
+                $row['date'],
+                $row['status'],
+                '<div class="table-col-actions"><span class="text-success tbl-action-btn tbl-action-btn-edit" data-id="'.$row['id'].'">Edit</span><span class="text-danger tbl-action-btn tbl-action-btn-delete" data-id="'.$row['id'].'">Delete</span></div>'
+            );
+        }
+        
+        return $this->response->setJson(array(
+            'success' => true,
+            'data' => $data
+        ));
+    }
+
+    public function all_closed()
+    {
+        $model = new TripModel();
+        $model_legs = new TripLegModel();
+        $model_operators = new TripOperatorModel();
+        $model_aircrafts = new AircraftModel();
+        $model_customers = new CustomerModel();
+        $model_aircraft_category = new AircraftCategoryModel();
+
+        $all = $model->where('status', 'Closed')->findAll();
         $data = array();
         foreach($all as $row) {
             $row_legs = '';

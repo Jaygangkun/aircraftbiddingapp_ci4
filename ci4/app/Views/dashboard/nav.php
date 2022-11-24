@@ -31,4 +31,10 @@
             <p>Trips</p>
         </a>
     </li>
+    <li class="nav-item">
+        <a href="<?= base_url('/closed-trips') ?>" class="nav-link <?php echo isset($sub_page) && $sub_page == 'closed-trips' ? 'active' : '' ?>">
+            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p>Closed Trips</p>
+        </a>
+    </li>
 </ul>
