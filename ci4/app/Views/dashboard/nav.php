@@ -37,4 +37,10 @@
             <p>Closed Trips</p>
         </a>
     </li>
+    <li class="nav-item">
+        <a href="<?= base_url('/settled-trips') ?>" class="nav-link <?php echo isset($sub_page) && $sub_page == 'settled-trips' ? 'active' : '' ?>">
+            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p>Settled Trips</p>
+        </a>
+    </li>
 </ul>

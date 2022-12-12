@@ -42,6 +42,7 @@ $routes->get('/aircraft/categories', 'Page::aircraft_categories');
 $routes->get('/aircrafts/(:any)', 'Page::aircrafts/$1');
 $routes->get('/trips', 'Page::trips');
 $routes->get('/closed-trips', 'Page::closed_trips');
+$routes->get('/settled-trips', 'Page::settled_trips');
 $routes->get('/trip/(:any)/details', 'Page::trip_details/$1');
 
 // Ajax Calls
@@ -78,6 +79,7 @@ $routes->group("ajax", function ($routes) {
 
     $routes->get('trip/all', 'AjaxTrip::all');
     $routes->get('trip/all/closed', 'AjaxTrip::all_closed');
+    $routes->get('trip/all/settled', 'AjaxTrip::all_settled');
     $routes->post('trip/add', 'AjaxTrip::add');
     $routes->post('trip/update', 'AjaxTrip::update');
     $routes->get('trip/get/(:any)', 'AjaxTrip::get/$1');

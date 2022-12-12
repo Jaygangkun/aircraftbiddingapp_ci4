@@ -185,6 +185,30 @@ class Page extends BaseController
         return view('dashboard/basic', $data);
     }
 
+    public function settled_trips()
+    {
+        if(!$this->session->has('user')) {
+            return redirect()->to('/login');
+        }
+
+        $model_customer = new CustomerModel();
+        $model_trip = new TripModel();
+        $model_aircraft = new AircraftModel();
+        $model_aircraft_category = new AircraftCategoryModel();
+
+        $data = array(
+            'title' => 'Settled Trips',
+            'sub_page' => 'settled-trips',
+
+            'customers' => $model_customer->orderBy('name', 'asc')->findAll(),
+            'trips' => $model_trip->findAll(),
+            'aircrafts' => $model_aircraft->get_aircrafts_with_category(),
+            'aircraft_categories' => $model_aircraft_category->orderBy('name', 'asc')->findAll(),
+        );
+
+        return view('dashboard/basic', $data);
+    }
+
     public function trip_details($trip_id)
     {
         if(!$this->session->has('user')) {
